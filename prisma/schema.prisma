@@ -1,0 +1,75 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Registry {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  goalAmount  Float    @default(10000)
+  occasion    String? // 👈 NEW
+  coverImage  String? // 👈 NEW
+  isPublic    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  gifts         GiftItem[]
+  contributions Contribution[]
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  resetToken       String?
+  resetTokenExpiry DateTime?
+
+  registries Registry[]
+}
+
+model GiftItem {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  price       Float?
+  quantity    Int      @default(1)
+  link        String?
+
+  isReserved  Boolean  @default(false)
+
+  registryId  String
+  registry    Registry @relation(fields: [registryId], references: [id], onDelete: Cascade)
+
+  // ✅ ADD THIS
+  contributions Contribution[]
+
+  createdAt   DateTime @default(now())
+}
+
+model Contribution {
+  id      String  @id @default(uuid())
+  amount  Float
+  message String?
+  name    String?
+
+  tx_ref String @unique
+  status String @default("pending")
+
+  giftItemId String?
+  giftItem   GiftItem? @relation(fields: [giftItemId], references: [id])
+
+  registryId String
+  registry   Registry @relation(fields: [registryId], references: [id])
+
+  createdAt DateTime @default(now())
+}

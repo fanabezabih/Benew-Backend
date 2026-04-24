@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Registry" ADD COLUMN     "goalAmount" DOUBLE PRECISION DEFAULT 10000;
