@@ -7,46 +7,36 @@ const app = express();
 // ========================
 // MIDDLEWARE
 // ========================
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
 
-// 🔥 IMPORTANT: Webhook must come BEFORE express.json()
+app.use(express.urlencoded({ extended: true }));
+
+// 🔥 Webhook BEFORE express.json()
 app.use(
   "/api/payment/webhook",
   express.json({
     verify: (req, res, buf) => {
-      req.rawBody = buf.toString(); // needed for signature verification
+      req.rawBody = buf.toString();
     }
   })
 );
 
-// normal JSON parsing for all other routes
 app.use(express.json());
 
 // ========================
-// ROUTES IMPORT
+// ROUTES
 // ========================
-const authRoutes = require("./routes/auth.routes");
-const passwordRoutes = require("./routes/password.routes");
-const userRoutes = require("./routes/user.routes");
-
-const giftRoutes = require("./routes/gift.routes");
-const registryRoutes = require("./routes/registry.routes");
-const contributionRoutes = require("./routes/contribution.routes");
-const paymentRoutes = require("./routes/payment.routes");
-const qrRoutes = require("./routes/qr.routes");
-
-// ========================
-// ROUTE MOUNTING
-// ========================
-app.use("/api/auth", authRoutes);
-app.use("/api/password", passwordRoutes);
-app.use("/api/user", userRoutes);
-
-app.use("/api/gifts", giftRoutes);
-app.use("/api/registry", registryRoutes);
-app.use("/api/contribution", contributionRoutes);
-app.use("/api/payment", paymentRoutes);
-app.use("/api/qr", qrRoutes);
+app.use("/api/auth", require("./routes/auth.routes"));
+app.use("/api/password", require("./routes/password.routes"));
+app.use("/api/user", require("./routes/user.routes"));
+app.use("/api/gifts", require("./routes/gift.routes"));
+app.use("/api/registry", require("./routes/registry.routes"));
+app.use("/api/contribution", require("./routes/contribution.routes"));
+app.use("/api/payment", require("./routes/payment.routes"));
+app.use("/api/qr", require("./routes/qr.routes"));
 
 // ========================
 // HEALTH CHECK
@@ -56,11 +46,14 @@ app.get("/", (req, res) => {
 });
 
 // ========================
-// GLOBAL ERROR HANDLER
+// ERROR HANDLER
 // ========================
 app.use((err, req, res, next) => {
   console.error("🔥 SERVER ERROR:", err);
-  res.status(500).json({ error: "Internal server error" });
+  res.status(500).json({
+    error: "Internal server error",
+    message: err.message
+  });
 });
 
 // ========================
