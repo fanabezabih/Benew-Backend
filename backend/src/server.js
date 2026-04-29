@@ -7,9 +7,12 @@ const app = express();
 // ========================
 // MIDDLEWARE
 // ========================
+// service.js
 app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.urlencoded({ extended: true }));
