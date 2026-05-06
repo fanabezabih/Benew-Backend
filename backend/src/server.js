@@ -5,16 +5,32 @@ const cors = require("cors");
 const app = express();
 
 // ========================
-// MIDDLEWARE
+// CORS CONFIG (FIXED)
 // ========================
-// service.js
+const allowedOrigins = [
+  "http://localhost:3000", // local dev
+  process.env.FRONTEND_URL // production (Vercel)
+].filter(Boolean); // removes undefined
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: function (origin, callback) {
+    // allow requests with no origin (like mobile apps, Postman)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("CORS not allowed"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+// ========================
+// MIDDLEWARE
+// ========================
 app.use(express.urlencoded({ extended: true }));
 
 // 🔥 Webhook BEFORE express.json()
