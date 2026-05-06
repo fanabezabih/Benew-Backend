@@ -22,58 +22,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [authVersion, setAuthVersion] = useState(0); // Force re-render counter
+
   const router = useRouter();
 
-  useEffect(() => {
-    const initAuth = () => {
-      try {
-        const savedToken = localStorage.getItem('benenw_token');
-        const savedUser = localStorage.getItem('benenw_user');
-        
-        if (savedToken && savedUser) {
-          setToken(savedToken);
-          setUser(JSON.parse(savedUser));
-        }
-      } catch (e) {
-        localStorage.removeItem('benenw_token');
-        localStorage.removeItem('benenw_user');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // ✅ Load session
+ useEffect(() => {
+  const savedToken = localStorage.getItem('benenw_token')
+  const savedUser = localStorage.getItem('benenw_user')
 
-    initAuth();
-  }, []);
+  if (savedToken && savedUser) {
+    setToken(savedToken)
+    setUser(JSON.parse(savedUser))
+  }
 
-  const login = async (email: string, password: string) => {
-    try {
-      setError(null);
-      const data = await authAPI.login({ email, password }) as { token: string; user: User };
-      
-      console.log('✅ Login response:', data);
-      
-      // Save to localStorage
-      localStorage.setItem('benenw_token', data.token);
-      localStorage.setItem('benenw_user', JSON.stringify(data.user));
-      
-      // Update state AND increment version to force re-render
-      setToken(data.token);
-      setUser(data.user);
-      setAuthVersion(prev => prev + 1); // ✅ FORCE RE-RENDER
-      
-      console.log('✅ Auth state updated, user:', data.user.name);
-      
-      // Wait a moment then redirect
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 100);
-    } catch (err: any) {
-      console.error('❌ Login failed:', err);
-      setError(err.message || 'Login failed');
-      throw err;
-    }
-  };
+  setIsLoading(false)
+}, [])
+
+  // ✅ LOGIN (FIXED)
+const login = async (email: string, password: string) => {
+  try {
+    setError(null)
+
+    const data = await authAPI.login({ email, password })
+
+    localStorage.setItem('benenw_token', data.token)
+    localStorage.setItem('benenw_user', JSON.stringify(data.user))
+
+    setToken(data.token)
+    setUser(data.user)
+
+  } catch (err: any) {
+    setError(err.message || 'Login failed')
+    throw err
+  }
+}
 
   const register = async (name: string, email: string, password: string) => {
     try {
@@ -85,14 +67,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    setAuthVersion(prev => prev + 1);
-    localStorage.removeItem('benenw_token');
-    localStorage.removeItem('benenw_user');
-    window.location.href = '/';
-  };
+ const logout = () => {
+  setUser(null);
+  setToken(null);
+
+  localStorage.removeItem('benenw_token');
+  localStorage.removeItem('benenw_user');
+
+  router.push('/');
+};
 
   const clearError = () => setError(null);
 
@@ -105,8 +88,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
+  if (!context) throw new Error('useAuth must be used within AuthProvider');
   return context;
 };

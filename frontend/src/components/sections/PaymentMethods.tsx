@@ -5,14 +5,14 @@ export default function PaymentMethods() {
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-5">
           {/* Local Images */}
           <div className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-[var(--border)] hover:-translate-y-1 hover:shadow-lg transition-all cursor-pointer">
-            <img src="/images/download (6).jpg" alt="telebirr" className="w-9 h-9 object-contain" />
+            <img src="/images/download(6).jpg" alt="telebirr" className="w-9 h-9 object-contain" />
             <div>
               <p className="font-semibold text-sm text-espresso">telebirr</p>
               <p className="text-xs text-[var(--fg-muted)]">ቴሌብር • Mobile</p>
             </div>
           </div>
           <div className="flex items-center gap-3 p-4 rounded-2xl bg-white border border-[var(--border)] hover:-translate-y-1 hover:shadow-lg transition-all cursor-pointer">
-            <img src="/images/download (7).jpg" alt="CBE Birr" className="w-9 h-9 object-contain" />
+            <img src="/images/download(8).jpg" alt="CBE Birr" className="w-9 h-9 object-contain" />
             <div>
               <p className="font-semibold text-sm text-espresso">CBE Birr</p>
               <p className="text-xs text-[var(--fg-muted)]">ንግድ ብር • Bank</p>

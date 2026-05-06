@@ -1,42 +1,96 @@
+// src/components/sections/HowItWorks.tsx
 export default function HowItWorks() {
   const steps = [
-    { num: '1', color: 'from-terracotta to-terracotta-dark', textClass: 'text-terracotta', titleEn: 'Create', titleAm: 'ይፍጠሩ', descEn: 'Open your list and choose your occasion.', descAm: 'ዝርዝርዎን ይክቱ እና አጋጣሚዎን ይምረጡ', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
-    { num: '2', color: 'from-gold to-gold-dark', textClass: 'text-[#6B5A4E]', titleEn: 'Add', titleAm: 'ያክሉ', descEn: 'Add gifts, contribution goals, or personal wishes.', descAm: 'ስጦታዎችን፣ የገንዘብ ግቦችን ወይም ግላዊ ምርጫዎችን ያክሉ', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> },
-    { num: '3', color: 'from-sage to-green-700', textClass: 'text-sage', titleEn: 'Share', titleAm: 'ያጋሩ', descEn: 'Send your list through WhatsApp, Telegram, or QR code.', descAm: 'ዝርዝርዎን በWhatsApp፣ Telegram ወይም QR ኮድ ያስተላልፉ', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> },
-    { num: '4', color: 'from-espresso to-espresso-light', textClass: 'text-espresso', titleEn: 'Receive', titleAm: 'ይቀበሉ', descEn: 'Track gifts and contributions in one simple dashboard.', descAm: 'ስጦታዎችን እና አስተዋፅኦዎችን በአንድ ቀላል ዳሽቦርድ ይታውቁ', icon: <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> },
-  ]
+    {
+      number: '1',
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        </svg>
+      ),
+      titleEn: 'Create your list',
+      titleAm: 'ዝርዝርዎን ይፍሩ',
+      descriptionEn: 'Add anything — gifts or cash goals.',
+      descriptionAm: 'ማንኛውንም ይጨምሩ — ጦታች ወይም የገንዘብ ግቦች።',
+    },
+    {
+      number: '2',
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+        </svg>
+      ),
+      titleEn: 'Share your link',
+      titleAm: 'ሊንዎን ያሩ',
+      descriptionEn: 'Send it on WhatsApp, Telegram, or anywhere.',
+      descriptionAm: 'በWhatsApp፣ Telegram ወይም በማንኛውም ቦታ ይላ።',
+    },
+    {
+      number: '3',
+      icon: (
+        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+        </svg>
+      ),
+      titleEn: 'Receive gifts',
+      titleAm: 'ስጦታዎችን ይቀበ',
+      descriptionEn: 'Get support instantly and securely.',
+      descriptionAm: 'ድጋፍን በፍነት እና በደህንነት ይበሉ',
+    },
+  ];
 
   return (
-    <section id="how-it-works" className="py-24 lg:py-32 relative">
+    <section id="how-it-works" className="py-24 lg:py-32 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Title */}
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-terracotta/10 rounded-full text-terracotta text-sm font-semibold mb-4 reveal">
-            <span className="text-en">How It Works</span><span className="text-am">እንዴት እንደሚሰራ</span>
-          </div>
-          <h2 className="reveal font-display text-4xl sm:text-5xl font-semibold text-espresso">
-            <span className="text-en">Simple to create. Easy to share. Better to receive.</span>
-            <span className="text-am">ለመፍጠር ቀላል። ለማጋራት ቀላል። ለመቀበል የተሻለ።</span>
+          <h2 className="reveal font-display text-4xl lg:text-5xl font-semibold text-espresso">
+            <span className="text-en">How it works</span>
+            <span className="text-am">እንዴት እንደሚሰራ</span>
           </h2>
+          <div className="w-16 h-1 bg-terracotta mx-auto mt-4 rounded-full"></div>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {steps.map((step, i) => (
-            <div key={i} className={`reveal reveal-delay-${i+1} text-center`}>
-              <div className={`w-20 h-20 mx-auto bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg`}>
-                {step.icon}
+
+        {/* Steps */}
+        <div className="grid md:grid-cols-3 gap-12 lg:gap-16">
+          {steps.map((step, index) => (
+            <div key={index} className="reveal reveal-delay-{index}">
+              <div className="relative">
+                {/* Number Badge */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-8 h-8 bg-terracotta text-white rounded-full flex items-center justify-center text-sm font-bold">
+                  {step.number}
+                </div>
+
+                {/* Icon */}
+                <div className="w-20 h-20 mx-auto bg-cream rounded-full flex items-center justify-center text-terracotta mb-6">
+                  {step.icon}
+                </div>
+
+                {/* Content */}
+                <div className="text-center">
+                  <h3 className="font-display text-xl font-semibold text-espresso mb-2">
+                    <span className="text-en">{step.titleEn}</span>
+                    <span className="text-am block text-sm text-espresso/70">{step.titleAm}</span>
+                  </h3>
+                  <p className="text-espresso/60 text-sm">
+                    <span className="text-en">{step.descriptionEn}</span>
+                    <span className="text-am block text-xs">{step.descriptionAm}</span>
+                  </p>
+                </div>
+
+                {/* Arrow (except last) */}
+                {index < steps.length - 1 && (
+                  <div className="hidden md:block absolute top-10 -right-8 text-terracotta/30">
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </div>
+                )}
               </div>
-              <div className={`font-display text-sm font-semibold ${step.textClass} mb-2`}>
-                <span className="text-en">Step {step.num}</span><span className="text-am">ደረጃ {step.num}</span>
-              </div>
-              <h3 className="font-display text-xl font-semibold text-espresso mb-3">
-                <span className="text-en">{step.titleEn}</span><span className="text-am">{step.titleAm}</span>
-              </h3>
-              <p className="text-espresso/60">
-                <span className="text-en">{step.descEn}</span><span className="text-am">{step.descAm}</span>
-              </p>
             </div>
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
