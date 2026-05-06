@@ -20,7 +20,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const router = useRouter();
 
-  useEffect(() => {
+useEffect(() => {
+  try {
+    if (typeof window === "undefined") return;
+
     const savedToken = localStorage.getItem("benenw_token");
     const savedUser = localStorage.getItem("benenw_user");
 
@@ -28,9 +31,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
     }
-
+  } catch (err) {
+    console.log("Auth init error:", err);
+    localStorage.removeItem("benenw_user");
+    localStorage.removeItem("benenw_token");
+  } finally {
     setIsLoading(false);
-  }, []);
+  }
+}, []);
 
   const login = async (email: string, password: string) => {
     const data = await authAPI.login({ email, password });
