@@ -14,17 +14,21 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps, Postman)
     if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      "http://localhost:3000",
+      "https://benenew.vercel.app"
+    ];
 
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     } else {
-      return callback(new Error("CORS not allowed"));
+      return callback(new Error("CORS blocked: " + origin));
     }
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
