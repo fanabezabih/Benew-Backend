@@ -1,7 +1,16 @@
 // src/lib/api.ts
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+// ==================== BASE URL (FIXED) ====================
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL as string;
+
+// 🔥 Fail fast if env is missing (prevents silent localhost bug)
+if (!API_BASE_URL) {
+  throw new Error("❌ NEXT_PUBLIC_API_URL is NOT defined");
+}
+
+// Optional debug (remove later)
+console.log("✅ API BASE URL:", API_BASE_URL);
 
 // ==================== TYPES ====================
 
@@ -9,8 +18,6 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  // future:
-  // profileImage?: string;
 }
 
 export interface AuthResponse {
@@ -241,7 +248,7 @@ export const giftAPI = {
     }),
 };
 
-// ==================== CONTRIBUTION APIs (FIXED) ====================
+// ==================== CONTRIBUTION APIs ====================
 
 export const contributionAPI = {
   add: (data: {
