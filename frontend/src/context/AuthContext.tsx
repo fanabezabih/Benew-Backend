@@ -1,8 +1,15 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { authAPI } from '@/lib/api';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+
+import { useRouter } from "next/navigation";
+import { authAPI } from "@/lib/api";
 
 const AuthContext = createContext<any>(null);
 
@@ -13,7 +20,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const router = useRouter();
 
-  // LOAD SESSION
   useEffect(() => {
     const savedToken = localStorage.getItem("benenw_token");
     const savedUser = localStorage.getItem("benenw_user");
@@ -26,7 +32,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  // LOGIN
   const login = async (email: string, password: string) => {
     const data = await authAPI.login({ email, password });
 
@@ -39,14 +44,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     router.push("/dashboard");
   };
 
-  // LOGOUT
   const logout = () => {
-    localStorage.removeItem("benenw_token");
-    localStorage.removeItem("benenw_user");
-
-    setToken(null);
+    localStorage.clear();
     setUser(null);
-
+    setToken(null);
     router.push("/");
   };
 

@@ -1,40 +1,43 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/context/AuthContext';
-import { userAPI } from '@/lib/api';
-import AuthGuard from '@/components/AuthGuard';
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { userAPI } from "@/lib/api";
+import AuthGuard from "@/components/AuthGuard";
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [dashboardData, setDashboardData] = useState<any>(null);
 
   useEffect(() => {
     async function load() {
       try {
-        const data = await userAPI.getDashboard();
-        setDashboardData(data);
-      } catch (err) {
-        console.error(err);
+        const res = await userAPI.getDashboard();
+        setData(res);
+      } catch (e) {
+        console.error(e);
       } finally {
         setLoading(false);
       }
     }
 
-    if (user) load();
-    else setLoading(false);
-  }, [user]);
+    if (isLoading) return;
 
-  if (loading) return <div>Loading...</div>;
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    load();
+  }, [user, isLoading]);
+
+  if (loading || isLoading) return <div>Loading...</div>;
 
   return (
     <AuthGuard>
-      <div className="p-10">
-        <h1>Dashboard</h1>
-        <pre>{JSON.stringify(dashboardData, null, 2)}</pre>
-      </div>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </AuthGuard>
   );
 }
