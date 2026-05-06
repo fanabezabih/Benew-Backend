@@ -1,30 +1,26 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/context/AuthContext'
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, isLoading } = useAuth()
-  const router = useRouter()
+  const { status } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      router.replace('/')
+    if (status === "guest") {
+      router.replace("/"); // or /login
     }
-  }, [user, isLoading, router])
+  }, [status]);
 
-  // Wait until auth is loaded
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-cream">
-        <div className="text-espresso text-lg">Loading...</div>
-      </div>
-    )
+  if (status === "loading") {
+    return <div className="p-10">Loading...</div>;
   }
 
-  // If no user → don't render anything (redirect happens)
-  if (!user) return null
+  if (status === "guest") {
+    return null;
+  }
 
-  return <>{children}</>
+  return <>{children}</>;
 }
