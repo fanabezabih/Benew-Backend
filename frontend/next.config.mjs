@@ -9,7 +9,6 @@ const nextConfig = {
     ],
   },
 
-  // 🚨 IMPORTANT FIX FOR VERCEL BUILD FAILURE
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -19,4 +18,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
