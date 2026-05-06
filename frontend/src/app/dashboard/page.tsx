@@ -1,69 +1,40 @@
-// src/lib/api.ts
+'use client';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL as string;
+import { useEffect, useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { userAPI } from '@/lib/api';
+import AuthGuard from '@/components/AuthGuard';
 
-if (!API_BASE_URL) {
-  throw new Error("❌ NEXT_PUBLIC_API_URL is not defined");
+export default function DashboardPage() {
+  const { user } = useAuth();
+
+  const [loading, setLoading] = useState(true);
+  const [dashboardData, setDashboardData] = useState<any>(null);
+
+  useEffect(() => {
+    async function load() {
+      try {
+        const data = await userAPI.getDashboard();
+        setDashboardData(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (user) load();
+    else setLoading(false);
+  }, [user]);
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
+    <AuthGuard>
+      <div className="p-10">
+        <h1>Dashboard</h1>
+        <pre>{JSON.stringify(dashboardData, null, 2)}</pre>
+      </div>
+    </AuthGuard>
+  );
 }
-
-// ==================== TOKEN ====================
-
-function getAuthToken(): string | null {
-  if (typeof window === "undefined") return null;
-  return localStorage.getItem("benenw_token");
-}
-
-// ==================== API CALL ====================
-
-export async function apiCall<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
-  const token = getAuthToken();
-
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    ...(options.headers as Record<string, string>),
-  };
-
-  if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
-  }
-
-  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers,
-  });
-
-  // ❌ IMPORTANT: do NOT crash silently
-  if (!res.ok) {
-    const errorText = await res.text();
-    throw new Error(errorText || `Request failed: ${res.status}`);
-  }
-
-  return res.json();
-}
-
-// ==================== AUTH ====================
-
-export const authAPI = {
-  register: (data: any) =>
-    apiCall("/auth/register", {
-      method: "POST",
-      body: JSON.stringify(data),
-    }),
-
-  login: (data: any) =>
-    apiCall("/auth/login", {
-      method: "POST",
-      body: JSON.stringify(data),
-    }),
-};
-
-// ==================== USER ====================
-
-export const userAPI = {
-  getDashboard: () => apiCall("/user/dashboard"),
-};
-
-export default apiCall;
