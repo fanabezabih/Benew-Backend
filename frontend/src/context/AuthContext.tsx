@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode
-} from 'react';
-
-import { useRouter } from 'next/navigation';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { authAPI } from '@/lib/api';
 
 type User = {
@@ -19,77 +11,54 @@ type User = {
 
 type AuthContextType = {
   user: User | null;
-  token: string | null;
-  status: "loading" | "authenticated" | "guest";
+  status: 'loading' | 'authenticated' | 'unauthenticated';
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const router = useRouter();
-
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [status, setStatus] = useState<"loading" | "authenticated" | "guest">("loading");
+  const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
 
-  // ✅ INIT AUTH (NON-BLOCKING)
   useEffect(() => {
-    try {
-      if (typeof window === "undefined") return;
-
-      const savedToken = localStorage.getItem("benenw_token");
-      const savedUser = localStorage.getItem("benenw_user");
-
-      if (savedToken && savedUser) {
-        setToken(savedToken);
-        setUser(JSON.parse(savedUser));
-        setStatus("authenticated");
-      } else {
-        setStatus("guest");
+    async function checkAuth() {
+      try {
+        const data = await authAPI.me();
+        setUser(data);
+        setStatus('authenticated');
+      } catch {
+        setUser(null);
+        setStatus('unauthenticated');
       }
-    } catch (err) {
-      console.log("Auth init error:", err);
-      setStatus("guest");
     }
+
+    checkAuth();
   }, []);
 
-  // LOGIN
   const login = async (email: string, password: string) => {
-    const data = await authAPI.login({ email, password });
-
-    localStorage.setItem("benenw_token", data.token);
-    localStorage.setItem("benenw_user", JSON.stringify(data.user));
-
-    setToken(data.token);
-    setUser(data.user);
-    setStatus("authenticated");
-
-    router.push("/dashboard");
+    await authAPI.login(email, password);
+    const data = await authAPI.me();
+    setUser(data);
+    setStatus('authenticated');
   };
 
-  // LOGOUT
-  const logout = () => {
-    localStorage.removeItem("benenw_token");
-    localStorage.removeItem("benenw_user");
-
-    setToken(null);
+  const logout = async () => {
+    await authAPI.logout();
     setUser(null);
-    setStatus("guest");
-
-    router.push("/");
+    setStatus('unauthenticated');
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, status, login, logout }}>
+    <AuthContext.Provider value={{ user, status, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => {
+export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be inside AuthProvider");
+  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
   return ctx;
-};
+}

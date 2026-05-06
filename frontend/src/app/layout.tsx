@@ -1,26 +1,13 @@
-// src/app/layout.tsx
-import type { Metadata } from 'next'
-import { dmSans, fraunces } from './fonts'
-import './globals.css'
+import { AuthProvider } from '@/context/AuthContext';
 
-import { AuthProvider } from '@/context/AuthContext'
-import { ModalProvider } from '@/context/ModalContext'
-
-export const metadata: Metadata = {
-  title: "Bene'nw — Ethiopian Gift Registry",
-  description: "Create your gift list, your way.",
-}
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${dmSans.variable} ${fraunces.variable} font-sans antialiased`}>
+    <html>
+      <body>
         <AuthProvider>
-          <ModalProvider>
-            {children}
-          </ModalProvider>
+          {children}
         </AuthProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,16 +1,14 @@
-// src/components/modals/LoginModal.tsx
+'use client';
 
-'use client'
-
-import { useState } from 'react'
-import Modal from '@/components/ui/Modal'
-import Button from '@/components/ui/Button'
-import { ModalProps } from '@/types'
-import { useAuth } from '@/context/AuthContext'
+import { useState } from 'react';
+import Modal from '@/components/ui/Modal';
+import Button from '@/components/ui/Button';
+import { ModalProps } from '@/types';
+import { useAuth } from '@/context/AuthContext';
 
 interface LoginModalProps extends ModalProps {
-  onSwitchToSignup: () => void
-  onSwitchToForgot: () => void
+  onSwitchToSignup: () => void;
+  onSwitchToForgot: () => void;
 }
 
 export default function LoginModal({
@@ -20,32 +18,34 @@ export default function LoginModal({
   onSwitchToForgot,
 }: LoginModalProps) {
 
-  const { login } = useAuth()
+  const { login } = useAuth();
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    setLoading(true)
-    setError('')
+    setLoading(true);
+    setError('');
 
     try {
-      // ✅ USE AUTH CONTEXT LOGIN
-      await login(email, password)
+      await login(email, password);
 
       // ✅ CLOSE MODAL
-      onClose()
+      onClose();
+
+      // 🔥 REDIRECT AFTER LOGIN (IMPORTANT)
+      window.location.href = "/dashboard";
 
     } catch (err) {
-      setError('Invalid email or password')
+      setError('Invalid email or password');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -68,7 +68,6 @@ export default function LoginModal({
             <span className="text-en">
               Log in to manage your gift lists
             </span>
-
             <span className="text-am">
               የስጦታ ርዝሮችን ለማስተዳደር ይግቡ
             </span>
@@ -87,105 +86,67 @@ export default function LoginModal({
 
           {/* EMAIL */}
           <div>
-            <label className="block text-sm font-medium text-[var(--fg-muted)] mb-1">
-              <span className="text-en">Email address</span>
-              <span className="text-am">ኢሜይል</span>
+            <label className="block text-sm font-medium mb-1">
+              Email
             </label>
-
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white font-[inherit] focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
+              className="w-full px-4 py-3 border rounded-xl"
               required
             />
           </div>
 
           {/* PASSWORD */}
           <div>
-            <label className="block text-sm font-medium text-[var(--fg-muted)] mb-1">
-              <span className="text-en">Password</span>
-              <span className="text-am">የይለፍ ቃል</span>
+            <label className="block text-sm font-medium mb-1">
+              Password
             </label>
-
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white font-[inherit] focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
+              className="w-full px-4 py-3 border rounded-xl"
               required
             />
           </div>
 
-          {/* REMEMBER + FORGOT */}
-          <div className="flex justify-between items-center">
-
-            <label className="flex items-center gap-2 text-sm text-[var(--fg-muted)]">
-              <input
-                type="checkbox"
-                className="w-4 h-4 rounded border-[var(--border)] text-terracotta focus:ring-terracotta"
-              />
-
-              <span className="text-en">Remember me</span>
-              <span className="text-am">አስታውሰኝ</span>
-            </label>
-
+          {/* FORGOT */}
+          <div className="flex justify-between text-sm">
             <button
               type="button"
               onClick={() => {
-                onClose()
-                onSwitchToForgot()
+                onClose();
+                onSwitchToForgot();
               }}
-              className="text-sm text-terracotta hover:underline font-medium"
             >
-              <span className="text-en">Forgot password?</span>
-              <span className="text-am">የይለፍ ቃል ረስዎት?</span>
+              Forgot password?
             </button>
           </div>
 
           {/* LOGIN BUTTON */}
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 rounded-full"
-          >
-            {loading ? (
-              <span className="text-en">Logging in...</span>
-            ) : (
-              <>
-                <span className="text-en">Log In</span>
-                <span className="text-am">ግባ</span>
-              </>
-            )}
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? 'Logging in...' : 'Login'}
           </Button>
 
           {/* SIGNUP */}
-          <p className="text-center text-sm text-[var(--fg-muted)]">
-
-            <span className="text-en">
-              Don't have an account?
-            </span>
-
-            <span className="text-am">
-              መለያ የለዎትም?
-            </span>
-
+          <p className="text-center text-sm">
+            Don’t have an account?{' '}
             <button
               type="button"
               onClick={() => {
-                onClose()
-                onSwitchToSignup()
+                onClose();
+                onSwitchToSignup();
               }}
-              className="text-terracotta font-semibold ml-1 hover:underline"
+              className="text-terracotta font-semibold"
             >
-              <span className="text-en">Sign Up</span>
-              <span className="text-am">ይመዝገቡ</span>
+              Sign up
             </button>
           </p>
+
         </form>
       </div>
     </Modal>
-  )
+  );
 }
