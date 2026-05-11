@@ -13,7 +13,8 @@ app.use(cookieParser());
 app.use(cors({
   origin: [
     "http://localhost:3000",
-    "https://benenew.vercel.app"
+    "https://benenew.vercel.app",
+   "https://benenew-amber.vercel.app"
   ],
   credentials: true,
 }));
