@@ -1,39 +1,129 @@
 import axios from 'axios';
 
-const API = axios.create({
+// ========================
+// AXIOS INSTANCE
+// ========================
+
+const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 });
 
-// AUTH
+// ========================
+// AUTH API
+// ========================
+
 export const authAPI = {
-  login: (email: string, password: string) =>
-    API.post('/auth/login', { email, password }),
 
-  register: (data: any) =>
-    API.post('/auth/register', data),
+  // LOGIN
+  login: async (
+    email: string,
+    password: string
+  ) => {
 
-  logout: () =>
-    API.post('/auth/logout'),
+    const res = await api.post(
+      '/auth/login',
+      {
+        email,
+        password,
+      }
+    );
 
-  me: () =>
-    API.get('/auth/me').then(res => res.data),
+    return res.data;
+  },
+
+  // REGISTER
+  register: async (
+    name: string,
+    email: string,
+    password: string
+  ) => {
+
+    const res = await api.post(
+      '/auth/register',
+      {
+        name,
+        email,
+        password,
+      }
+    );
+
+    return res.data;
+  },
+
+  // CURRENT USER
+  me: async () => {
+
+    const res = await api.get(
+      '/auth/me'
+    );
+
+    return res.data;
+  },
+
+  // LOGOUT
+  logout: async () => {
+
+    const res = await api.post(
+      '/auth/logout'
+    );
+
+    return res.data;
+  },
 };
 
-// USER
+// ========================
+// USER API
+// ========================
+
 export const userAPI = {
-  getDashboard: () =>
-    API.get('/user/dashboard').then(res => res.data),
+
+  getDashboard: async () => {
+
+    const res = await api.get(
+      '/user/dashboard'
+    );
+
+    return res.data;
+  },
 };
 
-// REGISTRY
+// ========================
+// REGISTRY API
+// ========================
+
 export const registryAPI = {
-  create: (data: any) =>
-    API.post('/registry', data).then(res => res.data),
 
-  getById: (id: string) =>
-    API.get(`/registry/${id}`).then(res => res.data),
+  // CREATE
+  create: async (data: any) => {
 
-  getShare: (id: string) =>
-    API.get(`/registry/${id}/share`).then(res => res.data),
+    const res = await api.post(
+      '/registry',
+      data
+    );
+
+    return res.data;
+  },
+
+  // GET ONE
+  getById: async (id: string) => {
+
+    const res = await api.get(
+      `/registry/${id}`
+    );
+
+    return res.data;
+  },
+
+  // SHARE
+  getShare: async (id: string) => {
+
+    const res = await api.get(
+      `/registry/${id}/share`
+    );
+
+    return res.data;
+  },
 };
+
+export default api;

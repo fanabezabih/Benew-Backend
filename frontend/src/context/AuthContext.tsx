@@ -1,64 +1,163 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+
 import { authAPI } from '@/lib/api';
 
-type User = {
+interface User {
   id: string;
   name: string;
   email: string;
-};
+}
 
-type AuthContextType = {
+interface AuthContextType {
   user: User | null;
-  status: 'loading' | 'authenticated' | 'unauthenticated';
-  login: (email: string, password: string) => Promise<void>;
+
+  status:
+    | 'loading'
+    | 'authenticated'
+    | 'unauthenticated';
+
+  login: (
+    email: string,
+    password: string
+  ) => Promise<void>;
+
+  register: (
+    name: string,
+    email: string,
+    password: string
+  ) => Promise<void>;
+
   logout: () => Promise<void>;
-};
+}
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext =
+  createContext<AuthContextType | null>(null);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [status, setStatus] = useState<'loading' | 'authenticated' | 'unauthenticated'>('loading');
+export function AuthProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
 
+  const [user, setUser] =
+    useState<User | null>(null);
+
+  const [status, setStatus] = useState<
+    'loading'
+    | 'authenticated'
+    | 'unauthenticated'
+  >('loading');
+
+  // ========================
+  // CHECK AUTH
+  // ========================
   useEffect(() => {
-    async function checkAuth() {
+
+    const checkAuth = async () => {
+
       try {
+
         const data = await authAPI.me();
+
         setUser(data);
+
         setStatus('authenticated');
-      } catch {
+
+      } catch (err) {
+
+        console.error(err);
+
         setUser(null);
+
         setStatus('unauthenticated');
       }
-    }
+    };
 
     checkAuth();
+
   }, []);
 
-  const login = async (email: string, password: string) => {
-    await authAPI.login(email, password);
-    const data = await authAPI.me();
-    setUser(data);
+  // ========================
+  // LOGIN
+  // ========================
+  const login = async (
+    email: string,
+    password: string
+  ) => {
+
+    await authAPI.login(
+      email,
+      password
+    );
+
+    const userData =
+      await authAPI.me();
+
+    setUser(userData);
+
     setStatus('authenticated');
   };
 
+  // ========================
+  // REGISTER
+  // ========================
+  const register = async (
+    name: string,
+    email: string,
+    password: string
+  ) => {
+
+    await authAPI.register(
+      name,
+      email,
+      password
+    );
+  };
+
+  // ========================
+  // LOGOUT
+  // ========================
   const logout = async () => {
+
     await authAPI.logout();
+
     setUser(null);
+
     setStatus('unauthenticated');
   };
 
   return (
-    <AuthContext.Provider value={{ user, status, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        status,
+        login,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
-  return ctx;
+
+  const context =
+    useContext(AuthContext);
+
+  if (!context) {
+    throw new Error(
+      'useAuth must be used within AuthProvider'
+    );
+  }
+
+  return context;
 }
