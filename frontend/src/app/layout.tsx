@@ -1,10 +1,6 @@
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
-
-export const metadata = {
-  title: "Bene'nw",
-  description: "Modern Ethiopian Registry Platform",
-};
+import { ModalProvider } from "@/context/ModalContext";
 
 export default function RootLayout({
   children,
@@ -15,7 +11,9 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
-          {children}
+          <ModalProvider>
+            {children}
+          </ModalProvider>
         </AuthProvider>
       </body>
     </html>
