@@ -1,4 +1,5 @@
 // src/components/sections/Features.tsx
+
 export default function Features() {
   const features = [
     {
@@ -10,7 +11,7 @@ export default function Features() {
       titleEn: 'Secure payments',
       titleAm: 'ደህንነቱ የተጠበቀ ክፍያ',
       descriptionEn: 'Telebirr and more',
-      descriptionAm: 'ቴሌር እና ጨማ',
+      descriptionAm: 'ቴሌብር እና ተጨማሪ',
     },
     {
       icon: (
@@ -21,7 +22,7 @@ export default function Features() {
       titleEn: 'Diaspora-friendly',
       titleAm: 'ለዲያስፖራ ተስማሚ',
       descriptionEn: 'Anyone, anywhere can send gifts',
-      descriptionAm: 'ማንኛውም ሰው በማንውም ቦታ ስጦታ ልኮ መቻል',
+      descriptionAm: 'ማንኛውም ሰው በማንኛውም ቦታ ስጦታ መላክ ይችላል',
     },
     {
       icon: (
@@ -32,7 +33,7 @@ export default function Features() {
       titleEn: 'One link for everything',
       titleAm: 'አንድ ሊንክ ለሁሉም ነገር',
       descriptionEn: 'Simple and easy to share',
-      descriptionAm: 'ቀላል እና ለማጋት ቀላል',
+      descriptionAm: 'ቀላል እና ለማጋራት ቀላል',
     },
     {
       icon: (
@@ -41,31 +42,37 @@ export default function Features() {
         </svg>
       ),
       titleEn: 'No awkward asks',
-      titleAm: 'አያሳፍር ያቄ የለም',
+      titleAm: 'አያሳፍር ጥያቄ የለም',
       descriptionEn: 'Let your list do the talking',
       descriptionAm: 'ዝርዝርዎ እንዲናገር ይተዉት',
     },
   ];
 
   return (
-    <section className="py-16 lg:py-20 bg-cream/50">
+    <section className="py-16 lg:py-20 bg-[#f7f2eb]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="reveal reveal-delay-{index} text-center p-6 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300"
+              className={`reveal reveal-delay-${index} text-center p-6 rounded-2xl hover:bg-white hover:shadow-lg transition-all duration-300`}
             >
-              <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-terracotta mb-4 shadow-sm">
+              <div className="w-16 h-16 mx-auto bg-white rounded-2xl flex items-center justify-center text-[#de6f3d] mb-4 shadow-sm">
                 {feature.icon}
               </div>
-              <h3 className="font-display text-lg font-semibold text-espresso mb-2">
+
+              <h3 className="font-display text-lg font-semibold text-[#2f1712] mb-2">
                 <span className="text-en">{feature.titleEn}</span>
-                <span className="text-am block text-sm text-espresso/70">{feature.titleAm}</span>
+                <span className="text-am block text-sm text-[#2f1712]/70">
+                  {feature.titleAm}
+                </span>
               </h3>
-              <p className="text-espresso/60 text-sm">
+
+              <p className="text-[#2f1712]/60 text-sm">
                 <span className="text-en">{feature.descriptionEn}</span>
-                <span className="text-am block text-xs">{feature.descriptionAm}</span>
+                <span className="text-am block text-xs">
+                  {feature.descriptionAm}
+                </span>
               </p>
             </div>
           ))}
