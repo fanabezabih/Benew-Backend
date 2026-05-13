@@ -2,29 +2,136 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
+/* =========================
+   ROOT VARIABLES
+========================= */
+
+:root {
+  --bg: #FAF6F1;
+  --fg: #2B1E1B;
+  --fg-muted: #6B5B57;
+
+  --border: #E8DDD2;
+
+  --terracotta: #C45D3E;
+  --terracotta-dark: #A84832;
+
+  --espresso: #5B3838;
+
+  --cream: #FFF8F0;
+  --gold: #D4A574;
+}
+
+/* =========================
+   BASE
+========================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  padding: 0;
-  margin: 0;
-  width: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'DM Sans', sans-serif;
   overflow-x: hidden;
 }
 
-body {
-  background: #FAF6F1;
-  color: #1f1f1f;
-  font-family: 'DM Sans', sans-serif;
+/* =========================
+   TYPOGRAPHY
+========================= */
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: 'Fraunces', serif;
 }
 
-* {
-  box-sizing: border-box;
+/* =========================
+   CONTAINER
+========================= */
+
+.container-custom {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 24px;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+/* =========================
+   BUTTONS
+========================= */
+
+.btn-primary {
+  background: var(--terracotta);
+  color: white;
+  border-radius: 9999px;
+  padding: 14px 24px;
+  font-weight: 600;
+  transition: 0.2s ease;
 }
 
-button {
-  cursor: pointer;
+.btn-primary:hover {
+  background: var(--terracotta-dark);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 9999px;
+  padding: 14px 24px;
+  font-weight: 600;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.nav-link {
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--terracotta);
+}
+
+/* =========================
+   HERO IMAGE
+========================= */
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 32px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.card-soft {
+  background: white;
+  border-radius: 24px;
+  border: 1px solid var(--border);
+}
+
+/* =========================
+   LANGUAGE
+========================= */
+
+.text-am {
+  display: none;
+}
+
+html.am .text-en {
+  display: none;
+}
+
+html.am .text-am {
+  display: inline;
 }
