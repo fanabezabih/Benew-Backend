@@ -1,26 +1,21 @@
-import "./globals.css";
-import { AuthProvider } from "@/context/AuthContext";
-import { ModalProvider } from "@/context/ModalContext";
+import './globals.css'
+import type { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Bene'nw",
-  description: "Modern Ethiopian Registry Platform",
-};
+  description: 'Gift registry platform',
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en">
       <body>
-        <AuthProvider>
-          <ModalProvider>
-            {children}
-          </ModalProvider>
-        </AuthProvider>
+        {children}
       </body>
     </html>
-  );
+  )
 }

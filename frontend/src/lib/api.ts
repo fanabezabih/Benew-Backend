@@ -1,27 +1,35 @@
 import axios from 'axios';
 
-// ========================
-// AXIOS INSTANCE
-// ========================
-
-const api = axios.create({
+const API = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
 });
 
-// ========================
-// AUTH API
-// ========================
+API.interceptors.request.use((config) => {
+  const token =
+    typeof window !== 'undefined'
+      ? localStorage.getItem('token')
+      : null;
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+
+
+/* =========================
+   AUTH API
+========================= */
 
 export const authAPI = {
-
-  // LOGIN
   login: async (
     email: string,
     password: string
   ) => {
-
-    const res = await api.post(
+    const res = await API.post(
       '/auth/login',
       {
         email,
@@ -32,14 +40,12 @@ export const authAPI = {
     return res.data;
   },
 
-  // REGISTER
   register: async (
     name: string,
     email: string,
     password: string
   ) => {
-
-    const res = await api.post(
+    const res = await API.post(
       '/auth/register',
       {
         name,
@@ -51,79 +57,87 @@ export const authAPI = {
     return res.data;
   },
 
-  // CURRENT USER
   me: async () => {
-
-    const res = await api.get(
-      '/auth/me'
-    );
+    const res = await API.get('/auth/me');
 
     return res.data;
   },
 
-  // LOGOUT
   logout: async () => {
+    const res = await API.post('/auth/logout');
 
-    const res = await api.post(
-      '/auth/logout'
+    return res.data;
+  },
+
+  forgotPassword: async (
+    email: string
+  ) => {
+    const res = await API.post(
+      '/auth/forgot-password',
+      {
+        email,
+      }
     );
 
     return res.data;
   },
 };
 
-// ========================
-// USER API
-// ========================
 
-export const userAPI = {
 
-  getDashboard: async () => {
-
-    const res = await api.get(
-      '/user/dashboard'
-    );
-
-    return res.data;
-  },
-};
-
-// ========================
-// REGISTRY API
-// ========================
+/* =========================
+   REGISTRY API
+========================= */
 
 export const registryAPI = {
-
-  // CREATE
   create: async (data: any) => {
-
-    const res = await api.post(
-      '/registry',
+    const res = await API.post(
+      '/registries',
       data
     );
 
     return res.data;
   },
 
-  // GET ONE
   getById: async (id: string) => {
-
-    const res = await api.get(
-      `/registry/${id}`
+    const res = await API.get(
+      `/registries/${id}`
     );
 
     return res.data;
   },
 
-  // SHARE
   getShare: async (id: string) => {
+    const res = await API.get(
+      `/registries/${id}/share`
+    );
 
-    const res = await api.get(
-      `/registry/${id}/share`
+    return res.data;
+  },
+
+  search: async (query: string) => {
+    const res = await API.get(
+      `/registries/search?q=${query}`
     );
 
     return res.data;
   },
 };
 
-export default api;
+
+
+/* =========================
+   USER API
+========================= */
+
+export const userAPI = {
+  getDashboard: async () => {
+    const res = await API.get(
+      '/users/dashboard'
+    );
+
+    return res.data;
+  },
+};
+
+export default API;

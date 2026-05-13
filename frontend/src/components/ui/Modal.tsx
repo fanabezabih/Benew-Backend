@@ -1,52 +1,54 @@
-'use client'
+'use client';
 
-import React, { useEffect } from 'react'
-import { cn } from '@/lib/utils'
-import { ModalProps } from '@/types'
+import { ReactNode } from 'react';
+
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
+  className?: string;
+}
 
 export default function Modal({
   isOpen,
   onClose,
   children,
-  className,
-}: ModalProps & { children: React.ReactNode; className?: string }) {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [isOpen])
+  className = '',
+}: ModalProps) {
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape)
-    }
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [isOpen, onClose])
-
-  if (!isOpen) return null
+  if (!isOpen) return null;
 
   return (
     <div
-      className="fixed inset-0 bg-white/50 backdrop-blur-sm z-[100] flex items-center justify-center"
-      onClick={onClose}
+      className="
+        fixed inset-0 z-50
+        flex items-center justify-center
+      "
     >
+      {/* BACKDROP */}
       <div
-        className={cn(
-          'bg-white rounded-3xl w-full max-w-[500px] max-h-[90vh] overflow-y-auto transform scale-100 transition-transform shadow-2xl',
-          className
-        )}
-        onClick={(e) => e.stopPropagation()}
+        className="
+          absolute inset-0
+          bg-black/50
+        "
+        onClick={onClose}
+      />
+
+      {/* MODAL CONTENT */}
+      <div
+        className={`
+          relative z-10
+          bg-white
+          rounded-2xl
+          shadow-2xl
+          w-full
+          max-w-md
+          mx-4
+          ${className}
+        `}
       >
         {children}
       </div>
     </div>
-  )
+  );
 }
