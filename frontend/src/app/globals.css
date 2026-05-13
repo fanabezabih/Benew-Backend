@@ -27,7 +27,7 @@
 
   --card: #FFFFFF;
 
-  --overlay: rgba(255,255,255,0.6);
+  --overlay: rgba(255,255,255,0.65);
 }
 
 .dark {
@@ -102,47 +102,14 @@ img {
 }
 
 /* =========================
-   BUTTONS
-========================= */
-
-.btn-primary {
-  background: var(--terracotta);
-  color: white;
-
-  border-radius: 999px;
-
-  transition: 0.25s;
-}
-
-.btn-primary:hover {
-  background: var(--terracotta-dark);
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background: white;
-  border: 1px solid var(--border);
-
-  border-radius: 999px;
-
-  transition: 0.25s;
-}
-
-.btn-secondary:hover {
-  transform: translateY(-2px);
-}
-
-/* =========================
    NAVBAR
 ========================= */
 
 .navbar {
   position: fixed;
   top: 0;
-
   width: 100%;
-
-  z-index: 1000;
+  z-index: 999;
 
   background: rgba(255,248,240,0.85);
 
@@ -158,27 +125,58 @@ img {
 .hero-section {
   position: relative;
   overflow: hidden;
+  padding-top: 120px;
 }
 
 .hero-image {
   width: 100%;
   height: auto;
-
   object-fit: cover;
-
   border-radius: 32px;
 }
 
 /* =========================
-   CARDS
+   BUTTONS
+========================= */
+
+.btn-primary {
+  background: var(--terracotta);
+  color: white;
+
+  border-radius: 999px;
+
+  transition: all 0.25s ease;
+}
+
+.btn-primary:hover {
+  background: var(--terracotta-dark);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: white;
+
+  border: 1px solid var(--border);
+
+  border-radius: 999px;
+
+  transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   CARD
 ========================= */
 
 .card {
   background: var(--card);
 
-  border: 1px solid var(--border);
-
   border-radius: 24px;
+
+  border: 1px solid var(--border);
 
   overflow: hidden;
 }
@@ -209,24 +207,6 @@ img {
 ::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 999px;
-}
-
-/* =========================
-   ANIMATIONS
-========================= */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(40px);
-
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* =========================

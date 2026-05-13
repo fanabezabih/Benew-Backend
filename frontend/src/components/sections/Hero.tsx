@@ -1,5 +1,3 @@
-// src/components/sections/Hero.tsx
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -13,187 +11,242 @@ const heroImages = [
 ];
 
 export default function Hero() {
-  const [currentImage, setCurrentImage] = useState(0);
+
+  const [currentImage, setCurrentImage] =
+    useState(0);
 
   const { openModal } = useModals();
+
   const { user } = useAuth();
 
   useEffect(() => {
+
     const interval = setInterval(() => {
-      setCurrentImage((prev) => (prev + 1) % heroImages.length);
+
+      setCurrentImage((prev) =>
+        (prev + 1) % heroImages.length
+      );
+
     }, 5000);
 
     return () => clearInterval(interval);
+
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-[#f7f2eb] pt-6 pb-0">
-      <div className="w-full pl-6 lg:pl-12 pr-0">
+    <section className="hero-section relative overflow-hidden bg-[#f7f2eb]">
 
-        {/* MAIN GRID */}
-        <div className="grid lg:grid-cols-[1fr_1.12fr] gap-0 items-start min-h-[700px]">
+      <div className="container-main">
 
-          {/* LEFT CONTENT */}
-        <div className="relative z-20 pt-14 lg:pt-20 max-w-[720px] ml-14 lg:ml-36">
+        <div className="grid lg:grid-cols-[1fr_1.05fr] items-center gap-10 min-h-screen pt-24">
 
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-[#efd9ca] text-[#d96b3c] rounded-full px-5 py-2 text-sm font-medium mb-8 lg:ml-4">
-              <span className="w-2 h-2 bg-[#d96b3c] rounded-full"></span>
-              Ethiopia&apos;s #1 Gift Registry Platform
+          {/* LEFT */}
+          <div className="relative z-20 max-w-[680px]">
+
+            {/* BADGE */}
+            <div className="inline-flex items-center gap-2 bg-[#efd9ca] text-[#d96b3c] rounded-full px-5 py-2 text-sm font-medium mb-8">
+
+              <span className="w-2 h-2 rounded-full bg-[#d96b3c]" />
+
+              <span className="text-en">
+                Ethiopia&apos;s #1 Gift Registry Platform
+              </span>
+
+              <span className="text-am">
+                የኢትዮጵያ #1 የስጦታ ዝርዝር መድረክ
+              </span>
+
             </div>
 
-            {/* Heading */}
-            <h1 className="font-serif text-[#2f1712] text-[74px] leading-[0.92] tracking-[-3px] font-semibold">
-              Turn moments
-              <br />
-              into{' '}
-              <span className="italic text-[#de6f3d]">
-                gifts
+            {/* HEADING */}
+            <h1 className="font-display text-[#2f1712] text-[56px] lg:text-[78px] leading-[0.95] tracking-[-3px] font-semibold">
+
+              <span className="text-en">
+                Turn moments
+                <br />
+                into{' '}
+                <span className="italic text-[#de6f3d]">
+                  gifts
+                </span>
+                <br />
+                people love
               </span>
-              <br />
-              people love
+
+              <span className="text-am">
+                ውብ ጊዜዎችን
+                <br />
+                ወደ{' '}
+                <span className="italic text-[#de6f3d]">
+                  ስጦታ
+                </span>
+                <br />
+                ይቀይሩ
+              </span>
+
             </h1>
 
-            {/* Description */}
-            <p className="mt-10 text-[20px] leading-[2] text-[#3d2a23]/80 max-w-[640px]">
-              Create one simple link for weddings, birthdays,
-              baby showers & more — and receive gifts or cash
-              effortlessly.
+            {/* DESCRIPTION */}
+            <p className="mt-8 text-[18px] lg:text-[20px] leading-[1.9] text-[#3d2a23]/80 max-w-[620px]">
+
+              <span className="text-en">
+                Create one simple link for weddings,
+                birthdays, baby showers & more —
+                and receive gifts or cash effortlessly.
+              </span>
+
+              <span className="text-am">
+                ለሰርግ፣ ለልደት፣ ለቤቢ ሻወር
+                እና ሌሎች አጋጣሚዎች
+                አንድ ቀላል ሊንክ ይፍጠሩ።
+              </span>
+
             </p>
 
-            {/* Buttons */}
-            <div className="flex items-center gap-5 mt-12">
+            {/* BUTTONS */}
+            <div className="flex flex-wrap items-center gap-4 mt-10">
+
               <button
                 onClick={() =>
                   user
                     ? (window.location.href = '/dashboard')
                     : openModal('signup')
                 }
-                className="bg-[#de6f3d] hover:bg-[#c85f32] text-white text-lg font-semibold px-10 py-5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg"
+                className="btn-primary px-8 py-4 text-lg font-semibold shadow-lg"
               >
-                Start Your Gift List — Free
+
+                <span className="text-en">
+                  Start Your Gift List — Free
+                </span>
+
+                <span className="text-am">
+                  ዝርዝርዎን ይጀምሩ — ነፃ
+                </span>
+
               </button>
 
               <button
-                onClick={() => openModal('search')}
-                className="bg-white border border-[#ddd1c6] hover:bg-[#f8f4ef] text-[#2f1712] text-lg font-semibold px-10 py-5 rounded-full transition-all duration-300"
+                onClick={() =>
+                  openModal('search')
+                }
+                className="btn-secondary px-8 py-4 text-lg font-semibold"
               >
-                Find a List
+
+                <span className="text-en">
+                  Find a List
+                </span>
+
+                <span className="text-am">
+                  ዝርዝር ፈልግ
+                </span>
+
               </button>
+
             </div>
 
-            {/* Trust badges */}
-            <div className="flex flex-wrap gap-10 mt-14 text-[16px] text-[#3d2a23]/70 pb-20">
+            {/* TRUST */}
+            <div className="flex flex-wrap gap-8 mt-14 text-[15px] text-[#3d2a23]/75">
 
               <div className="flex items-center gap-3">
                 <span>🇪🇹</span>
-                <span>Built for Ethiopia</span>
+
+                <span className="text-en">
+                  Built for Ethiopia
+                </span>
+
+                <span className="text-am">
+                  ለኢትዮጵያ የተገነባ
+                </span>
               </div>
 
               <div className="flex items-center gap-3">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
+                🔒
 
-                <span>Secure payments</span>
+                <span className="text-en">
+                  Secure payments
+                </span>
+
+                <span className="text-am">
+                  ደህንነቱ የተጠበቀ
+                </span>
               </div>
 
               <div className="flex items-center gap-3">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.06M12 18V3"
-                  />
-                </svg>
+                🌍
 
-                <span>Works globally</span>
+                <span className="text-en">
+                  Works globally
+                </span>
+
+                <span className="text-am">
+                  በዓለም አቀፍ ይሰራል
+                </span>
               </div>
+
             </div>
+
           </div>
 
-          {/* RIGHT IMAGE */}
-          <div className="relative h-[540px] lg:h-[760px] w-full flex justify-end self-start">
+          {/* RIGHT */}
+          <div className="relative h-[540px] lg:h-[760px]">
 
-            {/* CURVED LEFT FADE */}
-            <div className="absolute top-0 left-0 h-full w-[180px] z-10 pointer-events-none">
+            {/* LEFT SOFT FADE */}
+            <div className="absolute inset-y-0 left-0 w-[160px] z-20 pointer-events-none bg-gradient-to-r from-[#f7f2eb] via-[#f7f2eb]/90 to-transparent" />
 
-              {/* Main deep fade */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#f7f2eb] via-[#f7f2eb] via-35% to-transparent">
-              </div>
-
-              {/* Curved blur */}
-              <div className="absolute inset-y-0 right-[-120px] w-[240px] bg-[#f7f2eb]/60 blur-3xl rounded-full">
-              </div>
-
-              {/* Extra soft curve */}
-              <div className="absolute inset-y-10 right-[-70px] w-[140px] bg-[#f7f2eb]/70 blur-2xl rounded-full">
-              </div>
-            </div>
-
-            {/* TOP FADE */}
-            <div className="absolute top-0 left-0 right-0 h-8 z-20 pointer-events-none">
-
-              <div className="absolute inset-0 bg-gradient-to-b from-[#f7f2eb]/90 via-[#f7f2eb]/50 to-transparent">
-              </div>
-
-              <div className="absolute top-[-30px] left-1/2 -translate-x-1/2 w-[75%] h-16 bg-[#f7f2eb]/40 blur-3xl rounded-full">
-              </div>
-            </div>
-
-            {/* IMAGES */}
+            {/* IMAGE SLIDER */}
             {heroImages.map((image, index) => (
+
               <img
                 key={index}
                 src={image}
                 alt="Hero"
-                className={`absolute top-0 right-0 w-[94%] h-full object-cover object-right transition-opacity duration-[1800ms] ease-in-out ${
+                className={`hero-image absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-[1800ms] ${
                   currentImage === index
                     ? 'opacity-100'
                     : 'opacity-0'
                 }`}
               />
+
             ))}
 
             {/* FLOATING CARD */}
-            <div className="absolute bottom-10 right-10 bg-white rounded-[28px] shadow-2xl px-6 py-5 flex items-center gap-4 z-20 min-w-[320px]">
+            <div className="absolute bottom-8 right-6 z-30 bg-white rounded-[28px] shadow-2xl px-6 py-5 flex items-center gap-4 min-w-[310px]">
 
               <div className="w-14 h-14 rounded-2xl bg-[#f4c24f] flex items-center justify-center text-3xl">
                 🎁
               </div>
 
               <div>
+
                 <p className="text-[#d96b3c] font-semibold text-sm">
                   🎉 Congrats!
                 </p>
 
                 <p className="text-[#2b1711] text-base mt-1 leading-6">
-                  You received a gift
-                  <br />
-                  from your friend
+
+                  <span className="text-en">
+                    You received a gift
+                    <br />
+                    from your friend
+                  </span>
+
+                  <span className="text-am">
+                    ከጓደኛዎ ስጦታ
+                    <br />
+                    ተቀብለዋል
+                  </span>
+
                 </p>
+
               </div>
+
             </div>
 
           </div>
+
         </div>
+
       </div>
+
     </section>
   );
 }
