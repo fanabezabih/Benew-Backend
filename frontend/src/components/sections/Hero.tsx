@@ -208,39 +208,6 @@ export default function Hero() {
 
             ))}
 
-            {/* FLOATING CARD */}
-            <div className="absolute bottom-8 right-6 z-30 bg-white rounded-[28px] shadow-2xl px-6 py-5 flex items-center gap-4 min-w-[310px]">
-
-              <div className="w-14 h-14 rounded-2xl bg-[#f4c24f] flex items-center justify-center text-3xl">
-                🎁
-              </div>
-
-              <div>
-
-                <p className="text-[#d96b3c] font-semibold text-sm">
-                  🎉 Congrats!
-                </p>
-
-                <p className="text-[#2b1711] text-base mt-1 leading-6">
-
-                  <span className="text-en">
-                    You received a gift
-                    <br />
-                    from your friend
-                  </span>
-
-                  <span className="text-am">
-                    ከጓደኛዎ ስጦታ
-                    <br />
-                    ተቀብለዋል
-                  </span>
-
-                </p>
-
-              </div>
-
-            </div>
-
           </div>
 
         </div>
