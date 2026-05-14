@@ -34,14 +34,13 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="hero-section relative overflow-hidden bg-[#f7f2eb]">
-
+<section className="hero-section relative overflow-hidden mb-20 -mt-16">
       <div className="container-main">
 
         <div className="grid lg:grid-cols-[1fr_1.05fr] items-center gap-10 min-h-[88vh] pt-14">
 
           {/* LEFT */}
-  <div className="relative z-20 max-w-[680px] lg:translate-x-12 xl:translate-x-24">
+<div className="relative z-20 max-w-[680px] lg:translate-x-24 xl:translate-x-40 2xl:translate-x-56">
 
             {/* BADGE */}
             <div className="inline-flex items-center gap-2 bg-[#efd9ca] text-[#d96b3c] rounded-full px-5 py-2 text-sm font-medium mb-8">
@@ -187,7 +186,7 @@ export default function Hero() {
           </div>
 
           {/* RIGHT */}
-          <div className="relative h-[540px] lg:h-[760px]">
+          <div className="relative h-[540px] lg:h-[790px]">
 
             {/* LEFT SOFT FADE */}
             <div className="absolute inset-y-0 left-0 w-[160px] z-20 pointer-events-none bg-gradient-to-r from-[#f7f2eb] via-[#f7f2eb]/90 to-transparent" />

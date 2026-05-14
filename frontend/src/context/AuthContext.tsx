@@ -5,147 +5,63 @@ import {
   useContext,
   useEffect,
   useState,
-  ReactNode,
 } from 'react'
 
 import { authAPI } from '@/lib/api'
 
-interface User {
-  id?: string
-  name?: string
-  email?: string
+type User = {
+  id: string
+  name: string
+  email: string
+} | null
+
+type AuthContextType = {
+  user: User
+  status: 'loading' | 'authenticated' | 'unauthenticated'
+  login: (email: string, password: string) => Promise<void>
+  register: (name: string, email: string, password: string) => Promise<void>
+  logout: () => Promise<void>
+  refreshUser: () => Promise<void>
 }
 
-interface AuthContextType {
-  user: User | null
+const AuthContext = createContext<AuthContextType | null>(null)
 
-  status:
-    | 'loading'
-    | 'authenticated'
-    | 'unauthenticated'
-
-  login: (
-    email: string,
-    password: string
-  ) => Promise<void>
-
-  register: (
-    name: string,
-    email: string,
-    password: string
-  ) => Promise<void>
-
-  logout: () => void
-}
-
-const AuthContext =
-  createContext<AuthContextType | null>(
-    null
-  )
-
-export function AuthProvider({
-  children,
-}: {
-  children: ReactNode
-}) {
-  const [user, setUser] =
-    useState<User | null>(null)
-
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User>(null)
   const [status, setStatus] =
-    useState<
-      | 'loading'
-      | 'authenticated'
-      | 'unauthenticated'
-    >('loading')
+    useState<'loading' | 'authenticated' | 'unauthenticated'>('loading')
 
-  // CHECK AUTH ON LOAD
-  useEffect(() => {
-    const token =
-      localStorage.getItem('token')
-
-    const storedUser =
-      localStorage.getItem('user')
-
-    if (token && storedUser) {
-      setUser(JSON.parse(storedUser))
-
+  const refreshUser = async () => {
+    try {
+      const res = await authAPI.me()
+      setUser(res)
       setStatus('authenticated')
-    } else {
+    } catch {
+      setUser(null)
       setStatus('unauthenticated')
     }
+  }
+
+  useEffect(() => {
+    refreshUser()
   }, [])
 
-  // LOGIN
-  const login = async (
-    email: string,
-    password: string
-  ) => {
-    try {
-      const response =
-        await authAPI.login(
-          email,
-          password
-        )
-
-      const token =
-        response.token ||
-        response.accessToken
-
-      const userData =
-        response.user
-
-      localStorage.setItem(
-        'token',
-        token
-      )
-
-      localStorage.setItem(
-        'user',
-        JSON.stringify(userData)
-      )
-
-      setUser(userData)
-
-      setStatus('authenticated')
-    } catch (err) {
-      console.error(err)
-
-      setStatus('unauthenticated')
-
-      throw err
-    }
+  const login = async (email: string, password: string) => {
+    const res = await authAPI.login(email, password)
+    setUser(res.user)
+    setStatus('authenticated')
   }
 
-  // REGISTER
-  const register = async (
-    name: string,
-    email: string,
-    password: string
-  ) => {
-    try {
-      await authAPI.register(
-        name,
-        email,
-        password
-      )
-    } catch (err) {
-      console.error(err)
-
-      throw err
-    }
+  const register = async (name: string, email: string, password: string) => {
+    const res = await authAPI.register(name, email, password)
+    setUser(res.user)
+    setStatus('authenticated')
   }
 
-  // LOGOUT
-  const logout = () => {
-    localStorage.removeItem('token')
-
-    localStorage.removeItem('user')
-
+  const logout = async () => {
+    await authAPI.logout()
     setUser(null)
-
     setStatus('unauthenticated')
-
-    window.location.href = '/'
   }
 
   return (
@@ -156,6 +72,7 @@ export function AuthProvider({
         login,
         register,
         logout,
+        refreshUser,
       }}
     >
       {children}
@@ -163,15 +80,8 @@ export function AuthProvider({
   )
 }
 
-export function useAuth() {
-  const context =
-    useContext(AuthContext)
-
-  if (!context) {
-    throw new Error(
-      'useAuth must be used within AuthProvider'
-    )
-  }
-
-  return context
+export const useAuth = () => {
+  const ctx = useContext(AuthContext)
+  if (!ctx) throw new Error('useAuth must be used within AuthProvider')
+  return ctx
 }

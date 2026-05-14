@@ -19,113 +19,55 @@ API.interceptors.request.use((config) => {
 })
 
 /* =========================
-   AUTH API
+   AUTH
 ========================= */
 
 export const authAPI = {
-  login: async (
-    email: string,
-    password: string
-  ) => {
-    const res = await API.post('/auth/login', {
-      email,
-      password,
-    })
+  login: (email: string, password: string) =>
+    API.post('/auth/login', { email, password }).then(r => r.data),
 
-    return res.data
-  },
+  register: (name: string, email: string, password: string) =>
+    API.post('/auth/register', { name, email, password }).then(r => r.data),
 
-  register: async (
-    name: string,
-    email: string,
-    password: string
-  ) => {
-    const res = await API.post('/auth/register', {
-      name,
-      email,
-      password,
-    })
+  me: () =>
+    API.get('/auth/me').then(r => r.data),
 
-    return res.data
-  },
+  logout: () =>
+    API.post('/auth/logout').then(r => r.data),
 
-  me: async () => {
-    const res = await API.get('/auth/me')
+  // ✅ ADD THIS
+  forgotPassword: (email: string) =>
+    API.post('/password/forgot', { email }).then(r => r.data),
 
-    return res.data
-  },
-
-  logout: async () => {
-    const res = await API.post('/auth/logout')
-
-    return res.data
-  },
-
-  forgotPassword: async (
-    email: string
-  ) => {
-    const res = await API.post(
-      '/auth/forgot-password',
-      {
-        email,
-      }
-    )
-
-    return res.data
-  },
+  resetPassword: (token: string, newPassword: string) =>
+    API.post('/password/reset', { token, newPassword }).then(r => r.data),
 }
 
 /* =========================
-   REGISTRY API
+   REGISTRY (FIXED ROUTES)
 ========================= */
 
 export const registryAPI = {
-  create: async (data: any) => {
-    const res = await API.post(
-      '/registries',
-      data
-    )
+  create: (data: any) =>
+    API.post('/registry/create', data).then(r => r.data),
 
-    return res.data
-  },
+  getById: (id: string) =>
+    API.get(`/registry/${id}`).then(r => r.data),
 
-  getById: async (id: string) => {
-    const res = await API.get(
-      `/registries/${id}`
-    )
+  getShare: (id: string) =>
+    API.get(`/registry/${id}/share`).then(r => r.data),
 
-    return res.data
-  },
-
-  getShare: async (id: string) => {
-    const res = await API.get(
-      `/registries/${id}/share`
-    )
-
-    return res.data
-  },
-
-  search: async (query: string) => {
-    const res = await API.get(
-      `/registries/search?q=${query}`
-    )
-
-    return res.data
-  },
+  search: (q: string) =>
+    API.get(`/registry/search?q=${q}`).then(r => r.data),
 }
 
 /* =========================
-   USER API
+   USER
 ========================= */
 
 export const userAPI = {
-  getDashboard: async () => {
-    const res = await API.get(
-      '/users/dashboard'
-    )
-
-    return res.data
-  },
+  getDashboard: () =>
+    API.get('/user/dashboard').then(r => r.data),
 }
 
 export default API

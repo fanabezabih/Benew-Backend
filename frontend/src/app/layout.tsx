@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 
 import { AuthProvider } from '@/context/AuthContext'
 import { ModalProvider } from '@/context/ModalContext'
+import ModalRenderer from '@/components/modals/ModalRenderer'
 
 export const metadata: Metadata = {
   title: "Bene'nw",
@@ -21,6 +22,7 @@ export default function RootLayout({
         <AuthProvider>
           <ModalProvider>
             {children}
+            <ModalRenderer /> {/* 🔥 IMPORTANT */}
           </ModalProvider>
         </AuthProvider>
       </body>

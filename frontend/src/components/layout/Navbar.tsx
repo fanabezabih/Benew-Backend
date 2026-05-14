@@ -1,65 +1,100 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useModals } from '@/context/ModalContext'
+import { useAuth } from '@/context/AuthContext'
 
 export default function Navbar() {
   const [lang, setLang] = useState('en')
+
+  const { openModal } = useModals()
+  const { user, status, logout } = useAuth()
 
   useEffect(() => {
     document.documentElement.lang = lang
   }, [lang])
 
-  return (
-    <nav className="navbar">
-      <div className="container-main h-20 flex items-center justify-between">
+  if (status === 'loading') {
+    return (
+      <nav className="navbar">
+        <div className="container-main h-20 flex items-center">
+          Loading...
+        </div>
+      </nav>
+    )
+  }
 
-        <div className="flex items-center gap-3">
+return (
+  <nav className="navbar relative z-50">
+    <div className="container-main">
+      <div className="grid lg:grid-cols-[1fr_1.05fr] h-20 items-center">
+
+        {/* LEFT - LOGO (RESTORED ALIGNMENT WITH HERO GRID) */}
+        <div className="flex items-center gap-3 lg:translate-x-24 xl:translate-x-40 2xl:translate-x-56">
           <img
-            src="/images/Benenew-01.png"
+            src="/images/benenew.jpg"
             alt="Logo"
-            className="h-10 w-auto"
+            className="h-12 w-auto cursor-pointer"
+            onClick={() => (window.location.href = '/')}
           />
-
-          <span className="font-display text-2xl font-bold text-espresso">
-            Bene'nw
-          </span>
         </div>
 
-        <div className="flex items-center gap-8">
+        {/* RIGHT - NAV (RESTORED SPACING + ALIGNMENT) */}
+        <div className="flex items-center gap-6 lg:translate-x-16 xl:translate-x-28">
 
-          <button className="hover:text-terracotta transition">
-            <span className="text-en">How it works</span>
-            <span className="text-am">እንዴት ይሰራል</span>
-          </button>
+          {!user ? (
+            <>
+              <button onClick={() => openModal('search')}>
+                How it works
+              </button>
 
-          <button className="hover:text-terracotta transition">
-            <span className="text-en">Find a List</span>
-            <span className="text-am">ዝርዝር ፈልግ</span>
-          </button>
+              <button onClick={() => openModal('search')}>
+                Find a List
+              </button>
 
-          <button className="hover:text-terracotta transition">
-            <span className="text-en">Sign In</span>
-            <span className="text-am">ግባ</span>
-          </button>
+              <button onClick={() => openModal('login')}>
+                Sign In
+              </button>
 
-          <button className="btn-primary px-6 py-3">
-            <span className="text-en">Create Your List</span>
-            <span className="text-am">ዝርዝር ፍጠር</span>
-          </button>
+              <button onClick={() => openModal('signup')}>
+                Create My List
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => (window.location.href = '/dashboard')}>
+                My Lists
+              </button>
 
+              <button onClick={() => openModal('create')}>
+                Create List
+              </button>
+
+              <div className="flex items-center gap-3">
+
+                <div className="w-9 h-9 rounded-full bg-orange-600 text-white flex items-center justify-center">
+                  {user?.name?.charAt(0) || 'U'}
+                </div>
+
+                <button onClick={logout}>
+                  Logout
+                </button>
+
+              </div>
+            </>
+          )}
+
+          {/* LANGUAGE */}
           <button
-            onClick={() =>
-              setLang(lang === 'en' ? 'am' : 'en')
-            }
+            onClick={() => setLang(lang === 'en' ? 'am' : 'en')}
             className="font-semibold"
           >
-            {lang === 'en'
-              ? 'አማ'
-              : 'ENG'}
+            {lang === 'en' ? 'አማ' : 'ENG'}
           </button>
 
         </div>
       </div>
-    </nav>
-  )
+    </div>
+  </nav>
+)
 }
