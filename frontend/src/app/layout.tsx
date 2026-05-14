@@ -1,38 +1,27 @@
-import './globals.css';
+import './globals.css'
 
-import type { Metadata } from 'next';
+import { DM_Sans, Fraunces } from 'next/font/google'
 
-import { AuthProvider } from '@/context/AuthContext';
-import { ModalProvider } from '@/context/ModalContext';
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
 
-export const metadata: Metadata = {
-  title: "Bene'nw",
-  description: 'Gift Registry Platform',
-};
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  variable: '--font-display',
+})
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
-
   return (
     <html lang="en">
-
-      <body>
-
-        <AuthProvider>
-
-          <ModalProvider>
-
-            {children}
-
-          </ModalProvider>
-
-        </AuthProvider>
-
+      <body className={`${dmSans.variable} ${fraunces.variable}`}>
+        {children}
       </body>
-
     </html>
-  );
+  )
 }

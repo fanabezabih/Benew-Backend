@@ -2,54 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* =========================
-   ROOT COLORS
-========================= */
-
 :root {
-  --espresso: #5b3838;
-  --espresso-light: #ffffff;
-  --ivory: #FAF6F1;
-  --ivory-dark: #F0E9E0;
-  --terracotta: #C45D3E;
-  --terracotta-dark: #A84832;
-  --cream: #FFF8F0;
-  --sage: #8B9A7D;
-  --gold: #D4A574;
-
-  --bg: var(--cream);
-  --bg-subtle: var(--ivory);
-
-  --fg: var(--espresso);
-  --fg-muted: #6B5A4E;
-
-  --border: #E8DFD5;
-
-  --card: #FFFFFF;
-
-  --overlay: rgba(255,255,255,0.65);
-}
-
-.dark {
-  --bg: #1a1411;
-  --bg-subtle: #241c17;
-
-  --fg: #FAF6F1;
-  --fg-muted: #b7a89c;
-
-  --border: #3b3029;
-
-  --card: #241c17;
-
-  --overlay: rgba(0,0,0,0.5);
-}
-
-/* =========================
-   RESET
-========================= */
-
-* {
-  box-sizing: border-box;
+  --bg: #FAF6F1;
+  --fg: #2f1712;
+  --fg-muted: rgba(47, 23, 18, 0.65);
+  --border: rgba(47, 23, 18, 0.08);
 }
 
 html {
@@ -57,170 +14,55 @@ html {
 }
 
 body {
-  margin: 0;
-  padding: 0;
-
-  font-family: 'DM Sans', sans-serif;
-
   background: var(--bg);
   color: var(--fg);
-
-  overflow-x: hidden;
+  font-family: var(--font-sans);
 }
 
-/* =========================
-   LANGUAGE TOGGLE
-========================= */
+/* Typography */
 
-html[lang="en"] .text-am {
-  display: none !important;
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-display);
 }
 
-html[lang="am"] .text-en {
-  display: none !important;
+/* Language Toggle */
+
+.text-am {
+  display: none;
 }
 
-/* =========================
-   IMAGES
-========================= */
-
-img {
-  max-width: 100%;
-  display: block;
+html[lang='am'] .text-am {
+  display: inline;
 }
 
-/* =========================
-   CONTAINERS
-========================= */
-
-.container-main {
-  width: 100%;
-  max-width: 1280px;
-  margin: auto;
-  padding-left: 24px;
-  padding-right: 24px;
+html[lang='am'] .text-en {
+  display: none;
 }
 
-/* =========================
-   NAVBAR
-========================= */
+/* Reveal */
 
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 999;
-
-  background: rgba(255,248,240,0.85);
-
-  backdrop-filter: blur(12px);
-
-  border-bottom: 1px solid rgba(0,0,0,0.04);
+.reveal {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.6s ease;
 }
 
-/* =========================
-   HERO
-========================= */
-
-.hero-section {
-  position: relative;
-  overflow: hidden;
-  padding-top: 120px;
+.reveal-delay-1 {
+  transition-delay: 100ms;
 }
 
-.hero-image {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-  border-radius: 32px;
+.reveal-delay-2 {
+  transition-delay: 200ms;
 }
 
-/* =========================
-   BUTTONS
-========================= */
-
-.btn-primary {
-  background: var(--terracotta);
-  color: white;
-
-  border-radius: 999px;
-
-  transition: all 0.25s ease;
+.reveal-delay-3 {
+  transition-delay: 300ms;
 }
 
-.btn-primary:hover {
-  background: var(--terracotta-dark);
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background: white;
-
-  border: 1px solid var(--border);
-
-  border-radius: 999px;
-
-  transition: all 0.25s ease;
-}
-
-.btn-secondary:hover {
-  transform: translateY(-2px);
-}
-
-/* =========================
-   CARD
-========================= */
-
-.card {
-  background: var(--card);
-
-  border-radius: 24px;
-
-  border: 1px solid var(--border);
-
-  overflow: hidden;
-}
-
-/* =========================
-   ETHIOPIAN PATTERN
-========================= */
-
-.ethiopian-pattern {
-  background-image:
-    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='none' stroke='%23D4A574' stroke-width='0.5' opacity='0.15'/%3E%3C/svg%3E");
-
-  background-size: 30px 30px;
-}
-
-/* =========================
-   SCROLLBAR
-========================= */
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 999px;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 768px) {
-
-  .container-main {
-    padding-left: 16px;
-    padding-right: 16px;
-  }
-
-  .hero-image {
-    border-radius: 20px;
-  }
+.reveal-delay-4 {
+  transition-delay: 400ms;
 }

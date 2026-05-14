@@ -15,23 +15,20 @@ export default function Modal({
   children,
   className = '',
 }: ModalProps) {
-
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
-
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4">
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
 
       <div
-        className={`relative bg-white rounded-3xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden ${className}`}
+        className={`relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl ${className}`}
       >
         {children}
       </div>
-
     </div>
   )
 }
