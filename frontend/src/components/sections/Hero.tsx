@@ -41,7 +41,7 @@ export default function Hero() {
         <div className="grid lg:grid-cols-[1fr_1.05fr] items-center gap-10 min-h-[88vh] pt-14">
 
           {/* LEFT */}
-          <div className="relative z-20 max-w-[680px] lg:pl-20">
+  <div className="relative z-20 max-w-[680px] lg:translate-x-12 xl:translate-x-24">
 
             {/* BADGE */}
             <div className="inline-flex items-center gap-2 bg-[#efd9ca] text-[#d96b3c] rounded-full px-5 py-2 text-sm font-medium mb-8">
