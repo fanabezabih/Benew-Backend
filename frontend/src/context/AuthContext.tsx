@@ -1,137 +1,152 @@
-'use client';
+'use client'
 
 import {
   createContext,
   useContext,
   useEffect,
   useState,
-} from 'react';
+  ReactNode,
+} from 'react'
 
-import { authAPI } from '@/lib/api';
+import { authAPI } from '@/lib/api'
 
 interface User {
-  id: string;
-  name: string;
-  email: string;
+  id?: string
+  name?: string
+  email?: string
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: User | null
 
   status:
     | 'loading'
     | 'authenticated'
-    | 'unauthenticated';
+    | 'unauthenticated'
 
   login: (
     email: string,
     password: string
-  ) => Promise<void>;
+  ) => Promise<void>
 
   register: (
     name: string,
     email: string,
     password: string
-  ) => Promise<void>;
+  ) => Promise<void>
 
-  logout: () => Promise<void>;
+  logout: () => void
 }
 
 const AuthContext =
-  createContext<AuthContextType | null>(null);
+  createContext<AuthContextType | null>(
+    null
+  )
 
 export function AuthProvider({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode
 }) {
-
   const [user, setUser] =
-    useState<User | null>(null);
+    useState<User | null>(null)
 
-  const [status, setStatus] = useState<
-    'loading'
-    | 'authenticated'
-    | 'unauthenticated'
-  >('loading');
+  const [status, setStatus] =
+    useState<
+      | 'loading'
+      | 'authenticated'
+      | 'unauthenticated'
+    >('loading')
 
-  // ========================
-  // CHECK AUTH
-  // ========================
+  // CHECK AUTH ON LOAD
   useEffect(() => {
+    const token =
+      localStorage.getItem('token')
 
-    const checkAuth = async () => {
+    const storedUser =
+      localStorage.getItem('user')
 
-      try {
+    if (token && storedUser) {
+      setUser(JSON.parse(storedUser))
 
-        const data = await authAPI.me();
+      setStatus('authenticated')
+    } else {
+      setStatus('unauthenticated')
+    }
+  }, [])
 
-        setUser(data);
-
-        setStatus('authenticated');
-
-      } catch (err) {
-
-        console.error(err);
-
-        setUser(null);
-
-        setStatus('unauthenticated');
-      }
-    };
-
-    checkAuth();
-
-  }, []);
-
-  // ========================
   // LOGIN
-  // ========================
   const login = async (
     email: string,
     password: string
   ) => {
+    try {
+      const response =
+        await authAPI.login(
+          email,
+          password
+        )
 
-    await authAPI.login(
-      email,
-      password
-    );
+      const token =
+        response.token ||
+        response.accessToken
 
-    const userData =
-      await authAPI.me();
+      const userData =
+        response.user
 
-    setUser(userData);
+      localStorage.setItem(
+        'token',
+        token
+      )
 
-    setStatus('authenticated');
-  };
+      localStorage.setItem(
+        'user',
+        JSON.stringify(userData)
+      )
 
-  // ========================
+      setUser(userData)
+
+      setStatus('authenticated')
+    } catch (err) {
+      console.error(err)
+
+      setStatus('unauthenticated')
+
+      throw err
+    }
+  }
+
   // REGISTER
-  // ========================
   const register = async (
     name: string,
     email: string,
     password: string
   ) => {
+    try {
+      await authAPI.register(
+        name,
+        email,
+        password
+      )
+    } catch (err) {
+      console.error(err)
 
-    await authAPI.register(
-      name,
-      email,
-      password
-    );
-  };
+      throw err
+    }
+  }
 
-  // ========================
   // LOGOUT
-  // ========================
-  const logout = async () => {
+  const logout = () => {
+    localStorage.removeItem('token')
 
-    await authAPI.logout();
+    localStorage.removeItem('user')
 
-    setUser(null);
+    setUser(null)
 
-    setStatus('unauthenticated');
-  };
+    setStatus('unauthenticated')
+
+    window.location.href = '/'
+  }
 
   return (
     <AuthContext.Provider
@@ -145,19 +160,18 @@ export function AuthProvider({
     >
       {children}
     </AuthContext.Provider>
-  );
+  )
 }
 
 export function useAuth() {
-
   const context =
-    useContext(AuthContext);
+    useContext(AuthContext)
 
   if (!context) {
     throw new Error(
       'useAuth must be used within AuthProvider'
-    );
+    )
   }
 
-  return context;
+  return context
 }

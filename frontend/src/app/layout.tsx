@@ -1,16 +1,14 @@
 import './globals.css'
 
-import { DM_Sans, Fraunces } from 'next/font/google'
+import type { Metadata } from 'next'
 
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  variable: '--font-sans',
-})
+import { AuthProvider } from '@/context/AuthContext'
+import { ModalProvider } from '@/context/ModalContext'
 
-const fraunces = Fraunces({
-  subsets: ['latin'],
-  variable: '--font-display',
-})
+export const metadata: Metadata = {
+  title: "Bene'nw",
+  description: 'Gift registry platform',
+}
 
 export default function RootLayout({
   children,
@@ -19,8 +17,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${dmSans.variable} ${fraunces.variable}`}>
-        {children}
+      <body>
+        <AuthProvider>
+          <ModalProvider>
+            {children}
+          </ModalProvider>
+        </AuthProvider>
       </body>
     </html>
   )

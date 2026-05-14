@@ -6,84 +6,108 @@ interface PricingCardProps {
   onAction: (action: string) => void
 }
 
-export default function PricingCard({ plan, onAction }: PricingCardProps) {
+export default function PricingCard({
+  plan,
+  onAction,
+}: PricingCardProps) {
   return (
     <div
-      className={`rounded-2xl p-8 transition-all hover:-translate-y-1 ${
-        plan.popular
-          ? 'bg-terracotta border border-terracotta text-white shadow-xl shadow-terracotta/20 relative'
-          : 'bg-white border border-[var(--border)] hover:border-terracotta/30'
-      }`}
+      className={`
+        relative
+        rounded-[32px]
+        p-8
+        transition-all
+        duration-300
+        hover:-translate-y-2
+
+        ${
+          plan.popular
+            ? 'bg-terracotta text-white shadow-2xl shadow-terracotta/20'
+            : 'bg-white border border-[var(--border)] hover:shadow-xl'
+        }
+      `}
     >
       {plan.popular && (
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gold text-espresso text-xs font-bold rounded-full">
-          <span className="text-en">POPULAR</span>
-          <span className="text-am">ታዋቂ</span>
+          POPULAR
         </div>
       )}
-      <h3 className="font-display text-xl font-semibold mb-2">
+
+      <h3 className="font-display text-2xl font-semibold mb-2">
         <span className="text-en">{plan.nameEn}</span>
         <span className="text-am">{plan.nameAm}</span>
       </h3>
+
       <p
-        className={`text-sm mb-6 ${
-          plan.popular ? 'text-white/70' : 'text-[var(--fg-muted)]'
+        className={`mb-6 text-sm ${
+          plan.popular
+            ? 'text-white/70'
+            : 'text-[var(--fg-muted)]'
         }`}
       >
         <span className="text-en">{plan.descriptionEn}</span>
         <span className="text-am">{plan.descriptionAm}</span>
       </p>
-      <div
-        className={`font-display text-4xl font-bold mb-6 ${
-          plan.popular ? '' : 'text-espresso'
-        }`}
-      >
-        {plan.price === 0 ? '0' : plan.price}{' '}
+
+      <div className="mb-8">
+        <span className="font-display text-5xl font-bold">
+          {plan.price}
+        </span>
+
         <span
-          className={`text-lg font-normal ${
-            plan.popular ? 'text-white/70' : 'text-[var(--fg-muted)]'
+          className={`ml-2 ${
+            plan.popular
+              ? 'text-white/70'
+              : 'text-[var(--fg-muted)]'
           }`}
         >
           {plan.currency}
         </span>
       </div>
-      <ul className="space-y-3 mb-8">
+
+      <ul className="space-y-4 mb-8">
         {plan.features.map((feature, index) => (
           <li
             key={index}
-            className={`flex items-center gap-2 text-sm ${
-              plan.popular ? 'text-white/90' : 'text-espresso/70'
+            className={`flex items-center gap-3 text-sm ${
+              plan.popular
+                ? 'text-white/90'
+                : 'text-espresso/70'
             }`}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke={plan.popular ? 'white' : '#C45D3E'}
-              strokeWidth="2"
-            >
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-            <span className="text-en">{feature.textEn}</span>
-            <span className="text-am">{feature.textAm}</span>
+            <div className="w-5 h-5 rounded-full bg-gold/20 flex items-center justify-center">
+              ✓
+            </div>
+
+            <span className="text-en">
+              {feature.textEn}
+            </span>
+
+            <span className="text-am">
+              {feature.textAm}
+            </span>
           </li>
         ))}
       </ul>
+
       <Button
-        variant={plan.popular ? 'secondary' : 'secondary'}
         onClick={() => onAction(plan.buttonAction)}
-        className={`w-full py-3 ${
+        className={`w-full ${
           plan.popular
-            ? 'bg-white text-terracotta hover:bg-ivory border-white'
+            ? 'bg-white text-terracotta hover:bg-cream'
             : ''
         }`}
       >
         <span className="text-en">
-          {plan.buttonAction === 'signup' ? 'Get Started' : 'Contact Sales'}
+          {plan.buttonAction === 'signup'
+            ? 'Get Started'
+            : 'Contact Sales'}
         </span>
+
         <span className="text-am">
-          {plan.buttonAction === 'signup' ? 'ይጀምሩ' : 'ይገናኙ'}
+          {plan.buttonAction === 'signup'
+            ? 'ይጀምሩ'
+            : 'ይገናኙ'}
         </span>
       </Button>
     </div>

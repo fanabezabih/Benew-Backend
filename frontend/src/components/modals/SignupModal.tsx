@@ -1,19 +1,16 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState } from 'react'
 
-import Modal from '@/components/ui/Modal';
-import Button from '@/components/ui/Button';
+import Modal from '@/components/ui/Modal'
+import Button from '@/components/ui/Button'
 
-import { ModalProps } from '@/types';
+import { useAuth } from '@/context/AuthContext'
 
-import { useAuth } from '@/context/AuthContext';
-import { useModals } from '@/context/ModalContext';
-
-interface SignupModalProps
-  extends ModalProps {
-
-  onSwitchToLogin: () => void;
+interface SignupModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onSwitchToLogin: () => void
 }
 
 export default function SignupModal({
@@ -21,84 +18,69 @@ export default function SignupModal({
   onClose,
   onSwitchToLogin,
 }: SignupModalProps) {
+  const { register } = useAuth()
 
-  const { register } = useAuth();
+  const [loading, setLoading] =
+    useState(false)
 
-  const { openModal } =
-    useModals();
+  const [error, setError] =
+    useState('')
 
   const [formData, setFormData] =
     useState({
       firstName: '',
       lastName: '',
       email: '',
-      phone: '',
       password: '',
       agreeTerms: false,
-    });
-
-  const [loading, setLoading] =
-    useState(false);
-
-  const [error, setError] =
-    useState('');
+    })
 
   const handleSubmit = async (
     e: React.FormEvent
   ) => {
-
-    e.preventDefault();
+    e.preventDefault()
 
     if (!formData.agreeTerms) {
-
       setError(
         'Please agree to the terms'
-      );
+      )
 
-      return;
+      return
     }
 
-    setLoading(true);
-
-    setError('');
+    setLoading(true)
+    setError('')
 
     try {
-
       const fullName =
-        `${formData.firstName} ${formData.lastName}`.trim();
+        `${formData.firstName} ${formData.lastName}`.trim()
 
       await register(
         fullName,
         formData.email,
         formData.password
-      );
+      )
 
-      onClose();
+      onClose()
 
       alert(
-        '✅ Account created successfully! Please log in.'
-      );
+        '✅ Account created successfully!'
+      )
 
       setTimeout(() => {
-
-        openModal('login');
-
-      }, 500);
-
+        onSwitchToLogin()
+      }, 300)
     } catch (err: any) {
-
-      console.error(err);
+      console.error(err)
 
       setError(
         err?.response?.data?.message ||
-        'Failed to create account'
-      );
-
+          'Signup failed'
+      )
     } finally {
-
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Modal
@@ -106,61 +88,45 @@ export default function SignupModal({
       onClose={onClose}
     >
       <div className="p-8">
-
+        {/* HEADER */}
         <div className="text-center mb-6">
-
           <img
             src="/images/Benenew-01.png"
             alt="Bene'nw Logo"
             className="h-16 w-auto mx-auto mb-3"
           />
 
-          <h2 className="font-display text-2xl font-semibold text-espresso">
-
-            <span className="text-en">
-              Create your account
-            </span>
-
-            <span className="text-am">
-              መለያ ይፍጠሩ
-            </span>
-
+          <h2 className="font-display text-3xl font-semibold text-espresso">
+            Create Account
           </h2>
 
-          <p className="text-[var(--fg-muted)] mt-2 text-sm">
-
-            <span className="text-en">
-              Start your gift registry in minutes
-            </span>
-
-            <span className="text-am">
-              የስጦታ ዝርዝርዎን በትንሽ ይጀምሩ
-            </span>
-
+          <p className="text-sm text-espresso/60 mt-2">
+            Start your registry today
           </p>
         </div>
 
+        {/* ERROR */}
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm">
+          <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
             {error}
           </div>
         )}
 
+        {/* FORM */}
         <form
           onSubmit={handleSubmit}
           className="space-y-4"
         >
-
+          {/* NAMES */}
           <div className="grid grid-cols-2 gap-4">
-
             <div>
-
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium text-espresso mb-1">
                 First Name
               </label>
 
               <input
                 type="text"
+                placeholder="First name"
                 value={formData.firstName}
                 onChange={(e) =>
                   setFormData({
@@ -169,20 +135,19 @@ export default function SignupModal({
                       e.target.value,
                   })
                 }
-                className="w-full px-4 py-3 border rounded-xl"
+                className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
                 required
               />
-
             </div>
 
             <div>
-
-              <label className="block text-sm font-medium mb-1">
+              <label className="block text-sm font-medium text-espresso mb-1">
                 Last Name
               </label>
 
               <input
                 type="text"
+                placeholder="Last name"
                 value={formData.lastName}
                 onChange={(e) =>
                   setFormData({
@@ -191,43 +156,42 @@ export default function SignupModal({
                       e.target.value,
                   })
                 }
-                className="w-full px-4 py-3 border rounded-xl"
+                className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
                 required
               />
-
             </div>
           </div>
 
+          {/* EMAIL */}
           <div>
-
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium text-espresso mb-1">
               Email
             </label>
 
             <input
               type="email"
+              placeholder="you@example.com"
               value={formData.email}
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  email:
-                    e.target.value,
+                  email: e.target.value,
                 })
               }
-              className="w-full px-4 py-3 border rounded-xl"
+              className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
               required
             />
-
           </div>
 
+          {/* PASSWORD */}
           <div>
-
-            <label className="block text-sm font-medium mb-1">
+            <label className="block text-sm font-medium text-espresso mb-1">
               Password
             </label>
 
             <input
               type="password"
+              placeholder="********"
               value={formData.password}
               onChange={(e) =>
                 setFormData({
@@ -236,15 +200,14 @@ export default function SignupModal({
                     e.target.value,
                 })
               }
-              className="w-full px-4 py-3 border rounded-xl"
+              className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
               minLength={8}
               required
             />
-
           </div>
 
-          <div className="flex items-start gap-2">
-
+          {/* TERMS */}
+          <label className="flex items-center gap-2 text-sm text-espresso/70">
             <input
               type="checkbox"
               checked={
@@ -257,49 +220,39 @@ export default function SignupModal({
                     e.target.checked,
                 })
               }
-              required
             />
 
-            <span className="text-sm">
-              I agree to the terms
-            </span>
+            I agree to the terms
+          </label>
 
-          </div>
-
+          {/* BUTTON */}
           <Button
             type="submit"
             disabled={loading}
             className="w-full"
           >
-
             {loading
               ? 'Creating account...'
               : 'Create Account'}
-
           </Button>
 
-          <p className="text-center text-sm">
-
+          {/* SWITCH */}
+          <p className="text-center text-sm text-espresso/60">
             Already have an account?{' '}
 
             <button
               type="button"
               onClick={() => {
-
-                onClose();
-
-                onSwitchToLogin();
-
+                onClose()
+                onSwitchToLogin()
               }}
-              className="text-terracotta font-semibold"
+              className="text-terracotta font-semibold hover:underline"
             >
               Login
             </button>
-
           </p>
-
         </form>
       </div>
     </Modal>
-  );
+  )
 }
