@@ -1,16 +1,26 @@
 const { PrismaClient } = require("@prisma/client");
+
 const prisma = new PrismaClient();
 
 // ➕ ADD GIFT
 exports.addGift = async (req, res) => {
   try {
     const { registryId } = req.params;
-    const { title, description, price, quantity, link } = req.body;
+
+    const {
+      title,
+      description,
+      image,
+      price,
+      quantity,
+      link
+    } = req.body;
 
     const gift = await prisma.giftItem.create({
       data: {
         title,
         description,
+        image,
         price: price ? parseFloat(price) : null,
         quantity: quantity || 1,
         link,
@@ -19,9 +29,13 @@ exports.addGift = async (req, res) => {
     });
 
     res.json(gift);
+
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Failed to add gift" });
+
+    res.status(500).json({
+      error: "Failed to add gift"
+    });
   }
 };
 
@@ -36,9 +50,13 @@ exports.updateGift = async (req, res) => {
     });
 
     res.json(gift);
+
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Failed to update gift" });
+
+    res.status(500).json({
+      error: "Failed to update gift"
+    });
   }
 };
 
@@ -51,14 +69,20 @@ exports.deleteGift = async (req, res) => {
       where: { id }
     });
 
-    res.json({ message: "Gift deleted" });
+    res.json({
+      message: "Gift deleted"
+    });
+
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Failed to delete gift" });
+
+    res.status(500).json({
+      error: "Failed to delete gift"
+    });
   }
 };
 
-// 🔒 RESERVE GIFT (VERY IMPORTANT FOR REGISTRY SYSTEM)
+// 🔒 RESERVE GIFT
 exports.reserveGift = async (req, res) => {
   try {
     const { id } = req.params;
@@ -70,9 +94,16 @@ exports.reserveGift = async (req, res) => {
       }
     });
 
-    res.json({ message: "Gift reserved", gift });
+    res.json({
+      message: "Gift reserved",
+      gift
+    });
+
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Failed to reserve gift" });
+
+    res.status(500).json({
+      error: "Failed to reserve gift"
+    });
   }
 };

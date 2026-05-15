@@ -41,6 +41,7 @@ model GiftItem {
   id          String   @id @default(uuid())
   title       String
   description String?
+  image       String?   // 👈 ADD THIS
   price       Float?
   quantity    Int      @default(1)
   link        String?
@@ -50,7 +51,6 @@ model GiftItem {
   registryId  String
   registry    Registry @relation(fields: [registryId], references: [id], onDelete: Cascade)
 
-  // ✅ ADD THIS
   contributions Contribution[]
 
   createdAt   DateTime @default(now())
