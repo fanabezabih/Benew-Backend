@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
+const multer = require("multer");
+
+const upload = multer({
+  dest: "uploads/"
+});
+
 const {
   addGift,
   updateGift,
@@ -8,18 +14,45 @@ const {
   reserveGift
 } = require("../controllers/gift.controller");
 
-const { authMiddleware } = require("../middleware/auth.middleware");
+const {
+  authMiddleware
+} = require("../middleware/auth.middleware");
 
-// ➕ Add gift to registry
-router.post("/:registryId", authMiddleware, addGift);
+// =======================
+// ➕ ADD GIFT
+// =======================
+router.post(
+  "/:registryId",
+  authMiddleware,
+  upload.single("image"),
+  addGift
+);
 
-// ✏️ update gift
-router.put("/:id", authMiddleware, updateGift);
+// =======================
+// ✏️ UPDATE GIFT
+// =======================
+router.put(
+  "/:id",
+  authMiddleware,
+  upload.single("image"),
+  updateGift
+);
 
-// ❌ delete gift
-router.delete("/:id", authMiddleware, deleteGift);
+// =======================
+// ❌ DELETE GIFT
+// =======================
+router.delete(
+  "/:id",
+  authMiddleware,
+  deleteGift
+);
 
-// 🔒 reserve gift (public action OR authenticated — your choice)
-router.patch("/:id/reserve", reserveGift);
+// =======================
+// 🔒 RESERVE GIFT
+// =======================
+router.patch(
+  "/:id/reserve",
+  reserveGift
+);
 
 module.exports = router;

@@ -35,25 +35,30 @@ model User {
   resetTokenExpiry DateTime?
 
   registries Registry[]
+
+  addedGifts GiftItem[]
 }
 
 model GiftItem {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   title       String
   description String?
-  image       String?   // 👈 ADD THIS
+  image       String?
   price       Float?
-  quantity    Int      @default(1)
+  quantity    Int     @default(1)
   link        String?
 
-  isReserved  Boolean  @default(false)
+  isReserved Boolean @default(false)
 
-  registryId  String
-  registry    Registry @relation(fields: [registryId], references: [id], onDelete: Cascade)
+  registryId String
+  registry   Registry @relation(fields: [registryId], references: [id], onDelete: Cascade)
+
+  addedById String?
+  addedBy   User?   @relation(fields: [addedById], references: [id])
 
   contributions Contribution[]
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 model Contribution {
