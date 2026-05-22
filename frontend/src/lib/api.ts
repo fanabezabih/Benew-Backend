@@ -1,23 +1,10 @@
+// src/lib/api.ts
+
 import axios from 'axios'
 
 const API = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
-})
-
-API.interceptors.request.use((config) => {
-
-  const token =
-    typeof window !== 'undefined'
-      ? localStorage.getItem('token')
-      : null
-
-  if (token) {
-    config.headers.Authorization =
-      `Bearer ${token}`
-  }
-
-  return config
 })
 
 /* =========================
@@ -117,23 +104,32 @@ export const registryAPI = {
    GIFT
 ========================= */
 
-/* =========================
-   GIFT
-========================= */
-
 export const giftAPI = {
 
-  // ➕ ADD GIFT (keeps image upload)
-  addGift: (registryId: string, formData: FormData) =>
-    API.post(`/gifts/${registryId}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+  // ➕ ADD GIFT
+  addGift: (
+    registryId: string,
+    formData: FormData
+  ) =>
+    API.post(
+      `/gifts/${registryId}`,
+      formData,
+      {
+        headers: {
+          'Content-Type':
+            'multipart/form-data'
+        }
       }
-    }).then(r => r.data),
+    ).then(r => r.data),
 
-  // ✏️ UPDATE GIFT (NOW FIXED → accepts OBJECT OR FORM DATA SAFE)
-  updateGift: (id: string, data: any) => {
-    const isFormData = data instanceof FormData
+  // ✏️ UPDATE GIFT
+  updateGift: (
+    id: string,
+    data: any
+  ) => {
+
+    const isFormData =
+      data instanceof FormData
 
     return API.put(
       `/gifts/${id}`,
@@ -141,7 +137,8 @@ export const giftAPI = {
       isFormData
         ? {
             headers: {
-              'Content-Type': 'multipart/form-data'
+              'Content-Type':
+                'multipart/form-data'
             }
           }
         : undefined
@@ -150,11 +147,15 @@ export const giftAPI = {
 
   // ❌ DELETE
   deleteGift: (id: string) =>
-    API.delete(`/gifts/${id}`).then(r => r.data),
+    API.delete(
+      `/gifts/${id}`
+    ).then(r => r.data),
 
   // 🔒 RESERVE
   reserveGift: (id: string) =>
-    API.patch(`/gifts/${id}/reserve`).then(r => r.data),
+    API.patch(
+      `/gifts/${id}/reserve`
+    ).then(r => r.data),
 }
 
 /* =========================
