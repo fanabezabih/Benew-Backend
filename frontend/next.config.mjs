@@ -1,12 +1,22 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+
   images: {
     remotePatterns: [
+
+      // Unsplash
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+
+      // Cloudinary
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+
     ],
   },
 
@@ -17,6 +27,7 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
 };
 
 export default nextConfig;

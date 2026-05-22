@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-
 import Modal from '@/components/ui/Modal'
 import Button from '@/components/ui/Button'
-
 import { useAuth } from '@/context/AuthContext'
 
-interface SignupModalProps {
+interface Props {
   isOpen: boolean
   onClose: () => void
   onSwitchToLogin: () => void
@@ -17,34 +15,25 @@ export default function SignupModal({
   isOpen,
   onClose,
   onSwitchToLogin,
-}: SignupModalProps) {
+}: Props) {
   const { register } = useAuth()
 
-  const [loading, setLoading] =
-    useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const [error, setError] =
-    useState('')
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    agree: false,
+  })
 
-  const [formData, setFormData] =
-    useState({
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      agreeTerms: false,
-    })
-
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.agreeTerms) {
-      setError(
-        'Please agree to the terms'
-      )
-
+    if (!form.agree) {
+      setError('Please agree to terms')
       return
     }
 
@@ -52,201 +41,105 @@ export default function SignupModal({
     setError('')
 
     try {
-      const fullName =
-        `${formData.firstName} ${formData.lastName}`.trim()
+      const fullName = `${form.firstName} ${form.lastName}`
 
-      await register(
-        fullName,
-        formData.email,
-        formData.password
-      )
+      await register(fullName, form.email, form.password)
 
       onClose()
-
-      alert(
-        '✅ Account created successfully!'
-      )
-
-      setTimeout(() => {
-        onSwitchToLogin()
-      }, 300)
+      onSwitchToLogin() // IMPORTANT FIX
     } catch (err: any) {
-      console.error(err)
-
-      setError(
-        err?.response?.data?.message ||
-          'Signup failed'
-      )
+      setError(err?.response?.data?.error || 'Signup failed')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-    >
+    <Modal isOpen={isOpen} onClose={onClose}>
       <div className="p-8">
-        {/* HEADER */}
-        <div className="text-center mb-6">
-          <img
-            src="/images/Benenew-01.png"
-            alt="Bene'nw Logo"
-            className="h-16 w-auto mx-auto mb-3"
-          />
 
-          <h2 className="font-display text-3xl font-semibold text-espresso">
-            Create Account
-          </h2>
+        <h2 className="text-2xl font-semibold mb-6">
+          Create Account
+        </h2>
 
-          <p className="text-sm text-espresso/60 mt-2">
-            Start your registry today
-          </p>
-        </div>
-
-        {/* ERROR */}
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
+          <p className="text-red-500 text-sm mb-3">
             {error}
-          </div>
+          </p>
         )}
 
-        {/* FORM */}
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
-          {/* NAMES */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-espresso mb-1">
-                First Name
-              </label>
+        <form onSubmit={handleSubmit} className="space-y-4">
 
-              <input
-                type="text"
-                placeholder="First name"
-                value={formData.firstName}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    firstName:
-                      e.target.value,
-                  })
-                }
-                className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
-                required
-              />
-            </div>
+          <input
+            placeholder="First Name"
+            className="w-full border p-3 rounded-xl"
+            value={form.firstName}
+            onChange={(e) =>
+              setForm({ ...form, firstName: e.target.value })
+            }
+            required
+          />
 
-            <div>
-              <label className="block text-sm font-medium text-espresso mb-1">
-                Last Name
-              </label>
+          <input
+            placeholder="Last Name"
+            className="w-full border p-3 rounded-xl"
+            value={form.lastName}
+            onChange={(e) =>
+              setForm({ ...form, lastName: e.target.value })
+            }
+            required
+          />
 
-              <input
-                type="text"
-                placeholder="Last name"
-                value={formData.lastName}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    lastName:
-                      e.target.value,
-                  })
-                }
-                className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
-                required
-              />
-            </div>
-          </div>
+          <input
+            placeholder="Email"
+            type="email"
+            className="w-full border p-3 rounded-xl"
+            value={form.email}
+            onChange={(e) =>
+              setForm({ ...form, email: e.target.value })
+            }
+            required
+          />
 
-          {/* EMAIL */}
-          <div>
-            <label className="block text-sm font-medium text-espresso mb-1">
-              Email
-            </label>
+          <input
+            placeholder="Password"
+            type="password"
+            className="w-full border p-3 rounded-xl"
+            value={form.password}
+            onChange={(e) =>
+              setForm({ ...form, password: e.target.value })
+            }
+            required
+          />
 
-            <input
-              type="email"
-              placeholder="you@example.com"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  email: e.target.value,
-                })
-              }
-              className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
-              required
-            />
-          </div>
-
-          {/* PASSWORD */}
-          <div>
-            <label className="block text-sm font-medium text-espresso mb-1">
-              Password
-            </label>
-
-            <input
-              type="password"
-              placeholder="********"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  password:
-                    e.target.value,
-                })
-              }
-              className="w-full px-4 py-3 border border-[var(--border)] rounded-xl bg-white focus:outline-none focus:border-terracotta focus:ring-2 focus:ring-terracotta/10"
-              minLength={8}
-              required
-            />
-          </div>
-
-          {/* TERMS */}
-          <label className="flex items-center gap-2 text-sm text-espresso/70">
+          <label className="flex gap-2 text-sm">
             <input
               type="checkbox"
-              checked={
-                formData.agreeTerms
-              }
+              checked={form.agree}
               onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  agreeTerms:
-                    e.target.checked,
-                })
+                setForm({ ...form, agree: e.target.checked })
               }
             />
-
-            I agree to the terms
+            I agree to terms
           </label>
 
-          {/* BUTTON */}
           <Button
             type="submit"
             disabled={loading}
-            className="w-full"
+            className="w-full bg-[#d96b3c] text-white"
           >
-            {loading
-              ? 'Creating account...'
-              : 'Create Account'}
+            {loading ? 'Creating...' : 'Sign Up'}
           </Button>
 
-          {/* SWITCH */}
-          <p className="text-center text-sm text-espresso/60">
-            Already have an account?{' '}
-
+          <p className="text-center text-sm">
+            Already have account?{' '}
             <button
               type="button"
               onClick={() => {
                 onClose()
                 onSwitchToLogin()
               }}
-              className="text-terracotta font-semibold hover:underline"
+              className="text-terracotta"
             >
               Login
             </button>

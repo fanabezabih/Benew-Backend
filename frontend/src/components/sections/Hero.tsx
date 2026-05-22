@@ -34,13 +34,14 @@ export default function Hero() {
   }, []);
 
   return (
-<section className="hero-section relative overflow-hidden mb-20 -mt-16">
+    <section className="hero-section relative overflow-hidden mb-20 -mt-16">
+
       <div className="container-main">
 
         <div className="grid lg:grid-cols-[1fr_1.05fr] items-center gap-10 min-h-[88vh] pt-14">
 
           {/* LEFT */}
-<div className="relative z-20 max-w-[680px] lg:translate-x-24 xl:translate-x-40 2xl:translate-x-56">
+          <div className="relative z-20 max-w-[680px] lg:translate-x-24 xl:translate-x-40 2xl:translate-x-56">
 
             {/* BADGE */}
             <div className="inline-flex items-center gap-2 bg-[#efd9ca] text-[#d96b3c] rounded-full px-5 py-2 text-sm font-medium mb-8">
@@ -190,6 +191,9 @@ export default function Hero() {
 
             {/* LEFT SOFT FADE */}
             <div className="absolute inset-y-0 left-0 w-[160px] z-20 pointer-events-none bg-gradient-to-r from-[#f7f2eb] via-[#f7f2eb]/90 to-transparent" />
+
+            {/* TOP SOFT FADE */}
+            <div className="absolute inset-x-0 top-0 h-[70px] z-20 pointer-events-none bg-gradient-to-b from-[#f7f2eb]/80 via-[#f7f2eb]/40 to-transparent" />
 
             {/* IMAGE SLIDER */}
             {heroImages.map((image, index) => (
