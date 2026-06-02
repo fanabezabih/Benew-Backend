@@ -1,20 +1,54 @@
-const express = require('express');
-const router = express.Router();
+const express =
+  require('express')
+
+const router =
+  express.Router()
 
 const {
-  addContribution,
+
+  donateToGift,
+
+  verifyPayment,
+
   getRegistryContributions,
+
   getTotalContribution
-} = require('../controllers/contribution.controller');
 
+} = require(
+  '../controllers/contribution.controller'
+)
 
-// Add contribution
-router.post('/add', addContribution);
+// =========================
+// 💰 DONATE TO GIFT
+// =========================
+router.post(
+  '/gift/:giftItemId',
+  donateToGift
+)
 
-// Get all contributions for registry
-router.get('/:registryId', getRegistryContributions);
+// =========================
+// ✅ VERIFY PAYMENT
+// =========================
+router.get(
+  '/verify/:tx_ref',
+  verifyPayment
+)
 
-// Get total money raised
-router.get('/total/:registryId', getTotalContribution);
+// =========================
+// GET CONTRIBUTIONS
+// =========================
+router.get(
+  '/:registryId',
+  getRegistryContributions
+)
 
-module.exports = router;
+// =========================
+// GET TOTAL
+// =========================
+router.get(
+  '/total/:registryId',
+  getTotalContribution
+)
+
+module.exports =
+  router

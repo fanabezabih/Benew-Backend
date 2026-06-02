@@ -1,15 +1,33 @@
-const express = require("express");
-const router = express.Router();
+
+
+const express =
+  require("express")
+
+const router =
+  express.Router()
 
 const {
   initiatePayment,
   handleWebhook
-} = require("../controllers/payment.controller");
+} = require(
+  "../controllers/payment.controller"
+)
 
-// initiate payment
-router.post("/initiate", initiatePayment);
+// =========================
+// INITIATE PAYMENT
+// =========================
+router.post(
+  "/initiate",
+  initiatePayment
+)
 
-// 🔥 webhook (CHAPA calls this)
-router.post("/webhook", handleWebhook);
+// =========================
+// CHAPA WEBHOOK
+// =========================
+router.post(
+  "/webhook",
+  handleWebhook
+)
 
-module.exports = router;
+module.exports =
+  router

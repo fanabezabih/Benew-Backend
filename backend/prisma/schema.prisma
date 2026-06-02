@@ -50,6 +50,9 @@ model GiftItem {
 
   isReserved Boolean @default(false)
 
+  // ✅ NEW
+  reservedByName String?
+
   registryId String
   registry   Registry @relation(fields: [registryId], references: [id], onDelete: Cascade)
 

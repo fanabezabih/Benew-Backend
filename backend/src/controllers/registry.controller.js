@@ -8,39 +8,52 @@ const prisma = new PrismaClient();
 // =========================
 exports.createRegistry = async (req, res) => {
   try {
-    const { title, description, goalAmount, occasion } = req.body;
-    const userId = req.user.userId; // ✅ FIXED
 
-    const registry = await prisma.registry.create({
-      data: {
-        title,
-        description,
-        goalAmount: goalAmount || 10000,
-        occasion,
-        userId
-      }
-    });
+    const {
+      title,
+      description,
+      goalAmount,
+      occasion
+    } = req.body;
+
+    const userId =
+      req.user.userId;
+
+    const registry =
+      await prisma.registry.create({
+
+        data: {
+          title,
+          description,
+          goalAmount:
+            goalAmount || 10000,
+          occasion,
+          userId
+        }
+      });
 
     res.json(registry);
+
   } catch (err) {
+
     console.log(err);
-    res.status(500).json({ error: "Failed to create registry" });
+
+    res.status(500).json({
+      error:
+        "Failed to create registry"
+    });
   }
 };
 
 // =========================
 // PUBLIC REGISTRY
 // =========================
-// =========================
-// PUBLIC REGISTRY
-// =========================
-// =========================
-// PUBLIC REGISTRY
-// =========================
 exports.getRegistry = async (req, res) => {
+
   try {
 
-    const { id } = req.params;
+    const { id } =
+      req.params;
 
     const registry =
       await prisma.registry.findUnique({
@@ -50,8 +63,11 @@ exports.getRegistry = async (req, res) => {
         include: {
 
           gifts: {
+
             include: {
+
               addedBy: {
+
                 select: {
                   id: true,
                   name: true
@@ -65,10 +81,12 @@ exports.getRegistry = async (req, res) => {
       });
 
     if (!registry) {
+
       return res
         .status(404)
         .json({
-          error: "Registry not found"
+          error:
+            "Registry not found"
         });
     }
 
@@ -135,19 +153,24 @@ exports.getRegistry = async (req, res) => {
           description:
             g.description,
 
-          image: g.image,
+          image:
+            g.image,
 
-          link: g.link,
+          link:
+            g.link,
 
           isReserved:
             g.isReserved,
 
-          price: g.price,
+          reservedByName:
+            g.reservedByName,
+
+          price:
+            g.price,
 
           quantity:
             g.quantity,
 
-          // ✅ IMPORTANT
           addedById:
             g.addedById,
 
@@ -180,27 +203,43 @@ exports.getRegistry = async (req, res) => {
     // =========================
     const donors =
       completed.map((c) => ({
+
         name:
           c.name || "Anonymous",
 
-        amount: c.amount,
+        amount:
+          c.amount,
 
         message:
           c.message || ""
       }));
 
+    // =========================
+    // RESPONSE
+    // =========================
     res.json({
 
-      id: registry.id,
+      id:
+        registry.id,
 
-      title: registry.title,
+      title:
+        registry.title,
 
       description:
         registry.description,
 
+      occasion:
+        registry.occasion,
+
+      coverImage:
+        registry.coverImage,
+
       progress: {
+
         goal,
+
         totalRaised,
+
         percent: Number(
           percent.toFixed(2)
         )
@@ -223,242 +262,407 @@ exports.getRegistry = async (req, res) => {
 };
 
 // =========================
-// DASHBOARD (OWNER ONLY)
+// DASHBOARD
 // =========================
-exports.getRegistryDashboard = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user.userId;
+exports.getRegistryDashboard =
+  async (req, res) => {
 
-    const registry = await prisma.registry.findUnique({
-      where: { id },
-      include: {
-        gifts: true,
-        contributions: true
+    try {
+
+      const { id } =
+        req.params;
+
+      const userId =
+        req.user.userId;
+
+      const registry =
+        await prisma.registry.findUnique({
+
+          where: { id },
+
+          include: {
+            gifts: true,
+            contributions: true
+          }
+        });
+
+      if (!registry) {
+
+        return res
+          .status(404)
+          .json({
+            error:
+              "Registry not found"
+          });
       }
-    });
 
-    if (!registry) {
-      return res.status(404).json({ error: "Registry not found" });
+      // OWNER CHECK
+      if (
+        registry.userId !==
+        userId
+      ) {
+
+        return res
+          .status(403)
+          .json({
+            error:
+              "Unauthorized"
+          });
+      }
+
+      const completed =
+        registry.contributions.filter(
+          (c) =>
+            c.status === "completed"
+        );
+
+      const totalRaised =
+        completed.reduce(
+          (sum, c) =>
+            sum + c.amount,
+          0
+        );
+
+      const goal =
+        registry.goalAmount || 10000;
+
+      const progressPercent =
+        goal > 0
+          ? Math.min(
+              (totalRaised / goal) * 100,
+              100
+            )
+          : 0;
+
+      const messages =
+        completed
+          .filter(
+            (c) => c.message
+          )
+          .map((c) => ({
+            name:
+              c.name,
+
+            message:
+              c.message,
+
+            amount:
+              c.amount,
+
+            date:
+              c.createdAt
+          }));
+
+      res.json({
+
+        registry,
+
+        gifts:
+          registry.gifts,
+
+        contributions:
+          registry.contributions,
+
+        stats: {
+
+          totalRaised,
+
+          totalContributions:
+            completed.length
+        },
+
+        progress: {
+
+          goal,
+
+          percent: Number(
+            progressPercent.toFixed(2)
+          )
+        },
+
+        messages
+      });
+
+    } catch (err) {
+
+      console.log(err);
+
+      res.status(500).json({
+        error:
+          "Dashboard failed"
+      });
     }
-
-    // 🔒 OWNER CHECK
-    if (registry.userId !== userId) {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
-
-    const completed = registry.contributions.filter(
-      (c) => c.status === "completed"
-    );
-
-    const totalRaised = completed.reduce((sum, c) => sum + c.amount, 0);
-
-    const goal = registry.goalAmount || 10000;
-
-    const progressPercent =
-      goal > 0 ? Math.min((totalRaised / goal) * 100, 100) : 0;
-
-    const messages = completed
-      .filter(c => c.message)
-      .map(c => ({
-        name: c.name,
-        message: c.message,
-        amount: c.amount,
-        date: c.createdAt
-      }));
-
-    res.json({
-      registry,
-      gifts: registry.gifts,
-      contributions: registry.contributions,
-      stats: {
-        totalRaised,
-        totalContributions: completed.length
-      },
-      progress: {
-        goal,
-        percent: Number(progressPercent.toFixed(2))
-      },
-      messages
-    });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Dashboard failed" });
-  }
-};
+  };
 
 // =========================
 // UPDATE REGISTRY
 // =========================
-exports.updateRegistry = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user.userId;
+exports.updateRegistry =
+  async (req, res) => {
 
-    const registry = await prisma.registry.findUnique({
-      where: { id }
-    });
+    try {
 
-    if (!registry) {
-      return res.status(404).json({ error: "Registry not found" });
+      const { id } =
+        req.params;
+
+      const userId =
+        req.user.userId;
+
+      const registry =
+        await prisma.registry.findUnique({
+
+          where: { id }
+        });
+
+      if (!registry) {
+
+        return res
+          .status(404)
+          .json({
+            error:
+              "Registry not found"
+          });
+      }
+
+      if (
+        registry.userId !==
+        userId
+      ) {
+
+        return res
+          .status(403)
+          .json({
+            error:
+              "Unauthorized"
+          });
+      }
+
+      const updated =
+        await prisma.registry.update({
+
+          where: { id },
+
+          data:
+            req.body
+        });
+
+      res.json(updated);
+
+    } catch (err) {
+
+      console.log(err);
+
+      res.status(500).json({
+        error:
+          "Update failed"
+      });
     }
-
-    if (registry.userId !== userId) {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
-
-    const updated = await prisma.registry.update({
-      where: { id },
-      data: req.body
-    });
-
-    res.json(updated);
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Update failed" });
-  }
-};
+  };
 
 // =========================
 // DELETE REGISTRY
 // =========================
-exports.deleteRegistry = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user.userId;
+exports.deleteRegistry =
+  async (req, res) => {
 
-    const registry = await prisma.registry.findUnique({
-      where: { id }
-    });
+    try {
 
-    if (!registry) {
-      return res.status(404).json({ error: "Registry not found" });
+      const { id } =
+        req.params;
+
+      const userId =
+        req.user.userId;
+
+      const registry =
+        await prisma.registry.findUnique({
+
+          where: { id }
+        });
+
+      if (!registry) {
+
+        return res
+          .status(404)
+          .json({
+            error:
+              "Registry not found"
+          });
+      }
+
+      if (
+        registry.userId !==
+        userId
+      ) {
+
+        return res
+          .status(403)
+          .json({
+            error:
+              "Unauthorized"
+          });
+      }
+
+      await prisma.registry.delete({
+
+        where: { id }
+      });
+
+      res.json({
+        message:
+          "Registry deleted"
+      });
+
+    } catch (err) {
+
+      console.log(err);
+
+      res.status(500).json({
+        error:
+          "Delete failed"
+      });
     }
-
-    if (registry.userId !== userId) {
-      return res.status(403).json({ error: "Unauthorized" });
-    }
-
-    await prisma.registry.delete({
-      where: { id }
-    });
-
-    res.json({ message: "Registry deleted" });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Delete failed" });
-  }
-};
+  };
 
 // =========================
 // SEARCH
 // =========================
-exports.searchRegistries = async (req, res) => {
-  try {
-    const { q } = req.query;
+exports.searchRegistries =
+  async (req, res) => {
 
-    const registries = await prisma.registry.findMany({
-      where: q
-        ? {
-            title: {
-              contains: q,
-              mode: "insensitive"
-            }
+    try {
+
+      const { q } =
+        req.query;
+
+      const registries =
+        await prisma.registry.findMany({
+
+          where: q
+            ? {
+                title: {
+                  contains: q,
+                  mode:
+                    "insensitive"
+                }
+              }
+            : undefined,
+
+          select: {
+
+            id: true,
+
+            title: true,
+
+            description: true,
+
+            occasion: true,
+
+            goalAmount: true,
+
+            createdAt: true
           }
-        : undefined,
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        goalAmount: true,
-        createdAt: true
-      }
-    });
+        });
 
-    res.json(registries);
+      res.json(registries);
 
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: "Search failed" });
-  }
-};
+    } catch (err) {
 
-// =========================
-// SHARE SYSTEM
-// =========================
-// =========================
-// SHARE SYSTEM
-// =========================
-exports.getUnifiedShare = async (req, res) => {
+      console.log(err);
 
-  try {
-
-    const { id } = req.params;
-
-    const registry =
-      await prisma.registry.findUnique({
-        where: { id },
-
-        select: {
-          id: true,
-          title: true,
-          description: true
-        }
-      });
-
-    if (!registry) {
-
-      return res.status(404).json({
-        error: "Registry not found"
+      res.status(500).json({
+        error:
+          "Search failed"
       });
     }
+  };
 
-    // ✅ FIXED
-    const baseUrl =
-      process.env.FRONTEND_URL ||
-      "http://localhost:3000";
+// =========================
+// SHARE SYSTEM
+// =========================
+exports.getUnifiedShare =
+  async (req, res) => {
 
-    // ✅ FIXED
-    const shareUrl =
-      `${baseUrl}/registry/${registry.id}`;
+    try {
 
-    const whatsappUrl =
-      `https://wa.me/?text=${encodeURIComponent(
-        `🎁 ${registry.title}\n${shareUrl}`
-      )}`;
+      const { id } =
+        req.params;
 
-    const telegramUrl =
-      `https://t.me/share/url?url=${encodeURIComponent(
-        shareUrl
-      )}`;
+      const registry =
+        await prisma.registry.findUnique({
 
-    const email = {
-      subject: registry.title,
-      body: shareUrl
-    };
+          where: { id },
 
-    const qrCode =
-      await QRCode.toDataURL(
-        shareUrl
-      );
+          select: {
 
-    res.json({
-      shareUrl,
-      whatsappUrl,
-      telegramUrl,
-      email,
-      qrCode
-    });
+            id: true,
 
-  } catch (err) {
+            title: true,
 
-    console.log(err);
+            description: true
+          }
+        });
 
-    res.status(500).json({
-      error: "Share failed"
-    });
-  }
-};
+      if (!registry) {
+
+        return res
+          .status(404)
+          .json({
+            error:
+              "Registry not found"
+          });
+      }
+
+      const baseUrl =
+        process.env.FRONTEND_URL ||
+        "http://localhost:3000";
+
+      const shareUrl =
+        `${baseUrl}/registry/${registry.id}`;
+
+      const whatsappUrl =
+        `https://wa.me/?text=${encodeURIComponent(
+          `🎁 ${registry.title}\n${shareUrl}`
+        )}`;
+
+      const telegramUrl =
+        `https://t.me/share/url?url=${encodeURIComponent(
+          shareUrl
+        )}`;
+
+      const email = {
+
+        subject:
+          registry.title,
+
+        body:
+          shareUrl
+      };
+
+      const qrCode =
+        await QRCode.toDataURL(
+          shareUrl
+        );
+
+      res.json({
+
+        shareUrl,
+
+        whatsappUrl,
+
+        telegramUrl,
+
+        email,
+
+        qrCode
+      });
+
+    } catch (err) {
+
+      console.log(err);
+
+      res.status(500).json({
+        error:
+          "Share failed"
+      });
+    }
+  };

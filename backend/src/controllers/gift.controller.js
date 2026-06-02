@@ -297,31 +297,53 @@ exports.deleteGift = async (
 // =======================
 // 🔒 RESERVE GIFT
 // =======================
+// =======================
+// 🔒 RESERVE GIFT
+// =======================
 exports.reserveGift = async (req, res) => {
-  try {
-    const { id } = req.params;
 
+  try {
+
+    const { id } =
+      req.params;
+
+    const { name } =
+      req.body;
+
+    // =========================
+    // UPDATE GIFT
+    // =========================
     const gift =
       await prisma.giftItem.update({
+
         where: {
           id
         },
 
         data: {
-          isReserved: true
+
+          isReserved: true,
+
+          reservedByName:
+            name || "Someone"
         }
       });
 
     res.json({
-      message: "Gift reserved",
+
+      message:
+        "Gift reserved",
+
       gift
     });
 
   } catch (err) {
+
     console.log(err);
 
     res.status(500).json({
-      error: "Failed to reserve gift"
+      error:
+        "Failed to reserve gift"
     });
   }
 };

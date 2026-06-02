@@ -18,7 +18,7 @@ app.use(
 
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ DEBUG REQUESTS
+// DEBUG REQUESTS
 app.use((req, res, next) => {
   console.log("➡️ REQUEST:", req.method, req.url);
   next();
@@ -52,7 +52,7 @@ app.use("/api/contribution", require("./routes/contribution.routes"));
 app.use("/api/payment", require("./routes/payment.routes"));
 app.use("/api/qr", require("./routes/qr.routes"));
 
-// ✅ LINK PREVIEW ROUTE
+// LINK PREVIEW ROUTE
 app.use("/api/link-preview", require("./routes/linkPreview.routes"));
 
 // ========================
