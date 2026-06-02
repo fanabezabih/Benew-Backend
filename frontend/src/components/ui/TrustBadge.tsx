@@ -16,7 +16,6 @@ export default function TrustBadge({
       {icon}
 
       <span className="text-en">{textEn}</span>
-
       <span className="text-am">{textAm}</span>
     </div>
   )

@@ -1,4 +1,5 @@
 export default function StatsMarquee() {
+
   const stats = [
     {
       value: '2,500+',
@@ -28,7 +29,9 @@ export default function StatsMarquee() {
   ];
 
   return (
-    <section className="bg-espresso py-10">
+
+    <section className="bg-[#d96b3c] py-12 border-y border-[#c85f34]">
+
       <div className="max-w-7xl mx-auto px-4">
 
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
@@ -39,11 +42,15 @@ export default function StatsMarquee() {
               key={idx}
               className="text-center"
             >
-              <h3 className="font-display text-3xl font-semibold text-gold mb-2">
+
+              <h3 className="font-display text-3xl font-semibold text-white mb-2">
+
                 {stat.value}
+
               </h3>
 
-              <p className="text-sm text-white/80">
+              <p className="text-sm text-white/85">
+
                 <span className="text-en">
                   {stat.labelEn}
                 </span>
@@ -51,6 +58,7 @@ export default function StatsMarquee() {
                 <span className="text-am">
                   {stat.labelAm}
                 </span>
+
               </p>
 
             </div>

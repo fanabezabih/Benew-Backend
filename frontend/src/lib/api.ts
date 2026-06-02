@@ -1,5 +1,3 @@
-// src/lib/api.ts
-
 import axios from 'axios'
 
 const API = axios.create({
@@ -151,10 +149,53 @@ export const giftAPI = {
       `/gifts/${id}`
     ).then(r => r.data),
 
-  // 🔒 RESERVE
-  reserveGift: (id: string) =>
+  // ✅ MARK AS PURCHASED
+  reserveGift: (
+    id: string,
+    purchaserName: string
+  ) =>
     API.patch(
-      `/gifts/${id}/reserve`
+      `/gifts/${id}/reserve`,
+      {
+        name: purchaserName
+      }
+    ).then(r => r.data),
+}
+
+/* =========================
+   PAYMENT / CONTRIBUTIONS
+========================= */
+
+export const contributionAPI = {
+
+  initiatePayment: (
+    data: {
+      amount: number
+      email: string
+      first_name: string
+      last_name: string
+      registryId: string
+      giftItemId?: string
+      message?: string
+    }
+  ) =>
+    API.post(
+      '/payment/initiate',
+      data
+    ).then(r => r.data),
+
+  getRegistryContributions: (
+    registryId: string
+  ) =>
+    API.get(
+      `/contribution/${registryId}`
+    ).then(r => r.data),
+
+  getTotalContribution: (
+    registryId: string
+  ) =>
+    API.get(
+      `/contribution/total/${registryId}`
     ).then(r => r.data),
 }
 

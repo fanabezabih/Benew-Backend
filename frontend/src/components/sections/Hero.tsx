@@ -231,7 +231,7 @@ export default function Hero() {
                     <br />
                     from your friend
                   </span>
-
+                  
                   <span className="text-am">
                     ከጓደኛዎ ስጦታ
                     <br />

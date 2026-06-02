@@ -1,4 +1,4 @@
-// src/components/sections/Occasions.tsx
+
 'use client';
 
 import { useModals } from '@/context/ModalContext';

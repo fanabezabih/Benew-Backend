@@ -51,50 +51,98 @@ export default function FAQ() {
   const [openIdx, setOpenIdx] = useState<number | null>(null)
 
   return (
-    <section id="faq" className="py-24 lg:py-32 bg-gradient-to-b from-ivory to-ivory-dark">
+    <section id="faq" className="py-24 lg:py-32 bg-white">
+
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+
         <div className="text-center mb-12">
+
           <h2 className="reveal font-display text-4xl font-semibold text-espresso">
-            <span className="text-en">Frequently Asked Questions</span>
-            <span className="text-am">በተደጋጋሚ የሚጠየቁ ጥያቄች</span>
+
+            <span className="text-en">
+              Frequently Asked Questions
+            </span>
+
+            <span className="text-am">
+              በተደጋጋሚ የሚጠየቁ ጥያቄች
+            </span>
+
           </h2>
+
         </div>
+
         <div className="space-y-4">
+
           {faqs.map((faq, i) => (
-            <div 
-              key={i} 
-              className="reveal bg-white rounded-2xl border border-border overflow-hidden"
+
+            <div
+              key={i}
+              className="reveal bg-white rounded-2xl border border-[#efd9ca] overflow-hidden shadow-sm"
             >
-              <button 
-                className="w-full px-6 py-5 text-left flex justify-between items-center" 
-                onClick={() => setOpenIdx(openIdx === i ? null : i)}
+
+              <button
+                className="w-full px-6 py-5 text-left flex justify-between items-center hover:bg-[#fff8f4] transition"
+                onClick={() =>
+                  setOpenIdx(openIdx === i ? null : i)
+                }
               >
-                <span className="font-medium text-espresso">
-                  <span className="text-en">{faq.qEn}</span>
-                  <span className="text-am">{faq.qAm}</span>
+
+                <span className="font-medium text-[#2f1712]">
+
+                  <span className="text-en">
+                    {faq.qEn}
+                  </span>
+
+                  <span className="text-am">
+                    {faq.qAm}
+                  </span>
+
                 </span>
-                <svg 
-                  className={`w-5 h-5 text-muted transition-transform ${openIdx === i ? 'rotate-180' : ''}`} 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
+
+                <svg
+                  className={`w-5 h-5 text-[#d96b3c] transition-transform ${
+                    openIdx === i
+                      ? 'rotate-180'
+                      : ''
+                  }`}
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
                   strokeWidth="2"
                 >
-                  <polyline points="6 9 12 15 18 9"/>
+                  <polyline points="6 9 12 15 18 9" />
                 </svg>
+
               </button>
+
               {openIdx === i && (
-                <div className="px-6 pb-5 text-espresso/60">
-                  <p>
-                    <span className="text-en">{faq.aEn}</span>
-                    <span className="text-am">{faq.aAm}</span>
+
+                <div className="px-6 pb-5 pt-1 text-[#5c4b43] border-t border-[#f3dfd2] bg-[#fffdfa]">
+
+                  <p className="leading-8">
+
+                    <span className="text-en">
+                      {faq.aEn}
+                    </span>
+
+                    <span className="text-am">
+                      {faq.aAm}
+                    </span>
+
                   </p>
+
                 </div>
+
               )}
+
             </div>
+
           ))}
+
         </div>
+
       </div>
+
     </section>
   )
 }

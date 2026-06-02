@@ -12,12 +12,15 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .text-en {
@@ -64,6 +67,6 @@ select {
 }
 
 button {
-    cursor: pointer;
+  cursor: pointer;
   transition: all 0.25s ease;
 }

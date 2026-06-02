@@ -2,8 +2,6 @@
 
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
-
-// SECTIONS
 import Hero from '@/components/sections/Hero';
 import Features from '@/components/sections/Features';
 import HowItWorks from '@/components/sections/HowItWorks';
@@ -17,8 +15,6 @@ import PaymentMethods from '@/components/sections/PaymentMethods';
 import StatsMarquee from '@/components/sections/StatsMarquee';
 import AddAnything from '@/components/sections/AddAnything';
 
-// ❌ REMOVE THIS
-// import HeroGallery from '@/components/sections/HeroGallery';
 
 export default function HomePage() {
   return (
@@ -29,29 +25,35 @@ export default function HomePage() {
       <main>
 
         <Hero />
-
-        {/* ❌ REMOVE THIS */}
-        {/* <HeroGallery /> */}
-
         <StatsMarquee />
 
-        <Features />
+      
 
         <HowItWorks />
+        
 
         <Occasions />
+        
+        
 
         <AddAnything />
+         
 
-        <PaymentMethods />
+   
 
         <TrustAndSecurity />
+        
 
         <Testimonials />
+         <Features />
+         
+        
 
         <Pricing />
+              <PaymentMethods />
 
         <FAQ />
+          
 
         <FinalCTA />
 
