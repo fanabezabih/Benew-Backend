@@ -89,7 +89,7 @@ export default function PaymentMethods() {
               <img
                 src="/images/chapa.png"
                 alt="Chapa"
-                className="w-14 h-14 object-contain"
+                className="w-22 h-19 object-contain"
               />
 
             </div>

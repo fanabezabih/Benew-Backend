@@ -23,593 +23,678 @@ import {
   giftAPI
 } from '@/lib/api'
 
+import {
+  useAuth
+} from '@/context/AuthContext'
+
+
 import AddGiftModal
 from '@/components/modals/AddGiftModal'
 
 import GiftDetailsModal
 from '@/components/modals/GiftDetailsModal'
 
-import EditGiftModal from '@/components/modals/EditModal'
+import EditGiftModal
+from '@/components/modals/EditModal'
+
 
 interface Props {
-  params: {
-    id: string
+  params:{
+    id:string
   }
 }
 
+
 export default function RegistryPage({
   params
-}: Props) {
+}:Props){
 
-  const [registry, setRegistry] =
-    useState<any>(null)
 
-  const [loading, setLoading] =
-    useState(true)
+const { user } = useAuth()
 
-  const [showAddGift,
-    setShowAddGift
-  ] = useState(false)
 
-  const [selectedGift,
-    setSelectedGift
-  ] = useState<any>(null)
+const [registry,setRegistry] =
+useState<any>(null)
 
-  const [editingGift,
-    setEditingGift
-  ] = useState<any>(null)
 
-  const [copied,
-    setCopied
-  ] = useState(false)
+const [loading,setLoading] =
+useState(true)
 
-  const [shareUrl,
-    setShareUrl
-  ] = useState('')
 
-  // =========================
-  // SHARE URL
-  // =========================
-  useEffect(() => {
+const [showAddGift,setShowAddGift] =
+useState(false)
 
-    if (
-      typeof window !==
-      'undefined'
-    ) {
 
-      setShareUrl(
-        window.location.href
-      )
-    }
+const [selectedGift,setSelectedGift] =
+useState<any>(null)
 
-  }, [])
 
-  // =========================
-  // FETCH REGISTRY
-  // =========================
-  async function fetchRegistry() {
+const [editingGift,setEditingGift] =
+useState<any>(null)
 
-    try {
 
-      const data =
-        await registryAPI.getById(
-          params.id
-        )
+const [copied,setCopied] =
+useState(false)
 
-      setRegistry(data)
 
-    } catch (err) {
+const [shareUrl,setShareUrl] =
+useState('')
 
-      console.log(err)
 
-    } finally {
 
-      setLoading(false)
-    }
-  }
+// =======================
+// SHARE URL
+// =======================
 
-  useEffect(() => {
+useEffect(()=>{
 
-    fetchRegistry()
+if(typeof window !== 'undefined'){
 
-  }, [])
+setShareUrl(
+window.location.href
+)
 
-  // =========================
-  // DELETE GIFT
-  // =========================
-  async function handleDelete(
-    id: string
-  ) {
+}
 
-    const confirmDelete =
-      confirm(
-        'Delete this gift?'
-      )
+},[])
 
-    if (!confirmDelete)
-      return
 
-    try {
 
-      await giftAPI.deleteGift(id)
 
-      fetchRegistry()
+// =======================
+// FETCH REGISTRY
+// =======================
 
-    } catch (err) {
+async function fetchRegistry(){
 
-      console.log(err)
+try{
 
-      alert(
-        'Failed to delete gift'
-      )
-    }
-  }
+const data =
+await registryAPI.getById(
+params.id
+)
 
-  // =========================
-  // COPY LINK
-  // =========================
-  async function copyLink() {
+setRegistry(data)
 
-    if (!shareUrl)
-      return
 
-    await navigator
-      .clipboard
-      .writeText(shareUrl)
+}catch(err){
 
-    setCopied(true)
+console.log(err)
 
-    setTimeout(() => {
+}
 
-      setCopied(false)
+finally{
 
-    }, 2000)
-  }
+setLoading(false)
 
-  // =========================
-  // LOADING
-  // =========================
-  if (loading) {
+}
 
-    return (
+}
 
-      <div className="min-h-screen flex items-center justify-center bg-[#faf7f4]">
 
-        <div className="relative flex items-center justify-center">
 
-          <div className="w-28 h-28 border-4 border-[#e7d6cc] border-t-[#d96b3c] rounded-full animate-spin"></div>
+useEffect(()=>{
 
-          <img
-            src="/images/benenew.jpg"
-            alt="Logo"
-            className="w-16 h-16 rounded-full object-cover absolute"
-          />
+fetchRegistry()
 
-        </div>
+},[])
 
-      </div>
-    )
-  }
 
-  // =========================
-  // NOT FOUND
-  // =========================
-  if (!registry) {
 
-    return (
 
-      <div className="min-h-screen flex items-center justify-center">
 
-        Registry not found
+// =======================
+// DELETE
+// =======================
 
-      </div>
-    )
-  }
+async function handleDelete(
+id:string
+){
 
-  return (
+const ok =
+confirm(
+'Delete this gift?'
+)
 
-    <div className="min-h-screen bg-[#faf7f4]">
 
-      {/* HERO */}
-      <section className="relative h-[360px] overflow-hidden">
+if(!ok)return
 
-        {/* BACKGROUND IMAGE */}
-        <img
-          src={
-            registry.coverImage ||
 
-            (
-              (
-                registry.occasion ||
-                registry.title ||
-                ''
-              )
-                .toLowerCase()
-                .includes('birthday')
+try{
 
-                ? 'https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?q=80&w=2070&auto=format&fit=crop'
 
-              : (
-                  registry.occasion ||
-                  registry.title ||
-                  ''
-                )
-                  .toLowerCase()
-                  .includes('wedding')
+await giftAPI.deleteGift(id)
 
-                ? 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2070&auto=format&fit=crop'
 
-              : (
-                  registry.occasion ||
-                  registry.title ||
-                  ''
-                )
-                  .toLowerCase()
-                  .includes('baby')
+fetchRegistry()
 
-                ? 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?q=80&w=2070&auto=format&fit=crop'
 
-              : (
-                  registry.occasion ||
-                  registry.title ||
-                  ''
-                )
-                  .toLowerCase()
-                  .includes('graduation')
+}catch(err){
 
-                ? 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop'
+console.log(err)
 
-              : 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=2070&auto=format&fit=crop'
-            )
-          }
-          className="absolute inset-0 w-full h-full object-cover"
-        />
+alert(
+'Failed to delete gift'
+)
 
-        {/* OVERLAY */}
-        <div className="absolute inset-0 bg-black/45" />
+}
 
-        {/* CONTENT */}
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-4">
+}
 
-          <h1 className="text-5xl md:text-6xl font-display mb-4 drop-shadow-lg">
 
-            {registry.title}
 
-          </h1>
 
-          {registry.description && (
 
-            <p className="max-w-2xl text-white/90 text-lg md:text-xl leading-relaxed">
+// =======================
+// COPY
+// =======================
 
-              {registry.description}
+async function copyLink(){
 
-            </p>
-          )}
 
-        </div>
+await navigator.clipboard.writeText(
+shareUrl
+)
 
-      </section>
 
-      {/* CONTENT */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
+setCopied(true)
 
-        {/* SHARE SECTION */}
-        <div className="bg-white rounded-3xl p-6 shadow-sm mb-10">
 
-          <div className="flex flex-col lg:flex-row gap-8 items-center justify-between">
+setTimeout(()=>{
 
-            {/* LEFT */}
-            <div>
+setCopied(false)
 
-              <div className="flex items-center gap-2 mb-4">
+},2000)
 
-                <Share2
-                  className="text-[#d96b3c]"
-                />
 
-                <h3 className="text-xl font-semibold">
+}
 
-                  Share Registry
 
-                </h3>
 
-              </div>
 
-              {/* BUTTONS */}
-              <div className="flex flex-wrap gap-3">
 
-                {/* WHATSAPP */}
-                <a
-                  href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded-2xl flex items-center gap-2 transition"
-                >
+// =======================
+// LOADING
+// =======================
 
-                  <MessageCircle size={18} />
+if(loading){
 
-                  WhatsApp
+return (
 
-                </a>
+<div className="min-h-screen flex items-center justify-center bg-[#faf7f4]">
 
-                {/* TELEGRAM */}
-                <a
-                  href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="bg-sky-500 hover:bg-sky-600 text-white px-5 py-3 rounded-2xl transition"
-                >
 
-                  Telegram
+<div className="relative">
 
-                </a>
+<div className="w-28 h-28 border-4 border-[#e7d6cc] border-t-[#d96b3c] rounded-full animate-spin"/>
 
-                {/* COPY */}
-                <button
-                  onClick={copyLink}
-                  className="border px-5 py-3 rounded-2xl flex items-center gap-2 hover:bg-gray-50 transition"
-                >
 
-                  {copied
-                    ? <Check size={18} />
-                    : <Copy size={18} />
-                  }
+<img
+src="/images/benenew.jpg"
+className="w-16 h-16 rounded-full object-cover absolute top-6 left-6"
+/>
 
-                  {copied
-                    ? 'Copied'
-                    : 'Copy Link'
-                  }
 
-                </button>
+</div>
 
-              </div>
 
-              {/* URL */}
-              <div className="mt-4 text-sm text-gray-500 break-all">
+</div>
 
-                {shareUrl}
+)
 
-              </div>
+}
 
-            </div>
 
-            {/* QR */}
-            <div className="bg-white p-4 rounded-2xl border">
 
-              <QRCode
-                value={shareUrl || ' '}
-                size={120}
-              />
 
-            </div>
 
-          </div>
+if(!registry){
 
-        </div>
+return(
 
-        {/* HEADER */}
-        <div className="flex items-center justify-between mb-10">
+<div className="min-h-screen flex items-center justify-center">
 
-          <div className="flex items-center gap-3">
+Registry not found
 
-            <Gift className="text-[#d96b3c]" />
+</div>
 
-            <h2 className="text-3xl font-display text-espresso">
+)
 
-              Gifts
+}
 
-            </h2>
 
-          </div>
 
-          {/* ADD BUTTON */}
-          <button
-            onClick={() =>
-              setShowAddGift(true)
-            }
-            className="bg-[#d96b3c] hover:bg-[#c85f34] text-white px-6 py-3 rounded-2xl flex items-center gap-2 transition"
-          >
 
-            <Plus size={18} />
 
-            Add Gift
+return (
 
-          </button>
+<div className="min-h-screen bg-[#faf7f4]">
 
-        </div>
 
-        {/* GIFTS */}
-        {registry.gifts?.length === 0 ? (
 
-          <div className="bg-white rounded-3xl p-14 text-center shadow-sm">
+<section className="relative h-[360px] overflow-hidden">
 
-            <p className="text-gray-500">
 
-              No gifts added yet
+<img
 
-            </p>
+src={
+registry.coverImage ||
+'https://images.unsplash.com/photo-1519225421980-715cb0215aed'
+}
 
-          </div>
+className="absolute inset-0 w-full h-full object-cover"
 
-        ) : (
+/>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
-            {registry.gifts.map(
-              (gift: any) => (
+<div className="absolute inset-0 bg-black/45"/>
 
-                <div
-                  key={gift.id}
-                  onClick={() =>
-                    setSelectedGift(gift)
-                  }
-                  className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition cursor-pointer relative group"
-                >
 
-                  {/* IMAGE */}
-                  {gift.image ? (
 
-                    <div className="overflow-hidden">
+<div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-4 text-center">
 
-                      <img
-                        src={gift.image}
-                        className="w-full h-72 object-cover group-hover:scale-105 transition duration-500"
-                      />
 
-                    </div>
+<h1 className="text-5xl font-display">
 
-                  ) : (
+{registry.title}
 
-                    <div className="h-72 bg-gray-100 flex items-center justify-center">
+</h1>
 
-                      <Gift
-                        size={42}
-                        className="text-gray-300"
-                      />
 
-                    </div>
-                  )}
 
-                  {/* PURCHASED */}
-                  {gift.isReserved && (
+<p className="max-w-2xl mt-4">
 
-                    <div className="absolute top-4 left-4 bg-green-500 text-white text-xs px-3 py-1 rounded-full shadow">
+{registry.description}
 
-                      Purchased
+</p>
 
-                    </div>
-                  )}
 
-                  {/* ACTIONS */}
-                  <div className="absolute top-4 right-4 flex gap-2">
 
-                    {/* EDIT */}
-                    <button
-                      onClick={(e) => {
+</div>
 
-                        e.stopPropagation()
 
-                        setEditingGift(gift)
-                      }}
-                      className="bg-white rounded-full p-2 shadow hover:bg-blue-50 transition"
-                    >
+</section>
 
-                      <Pencil
-                        size={18}
-                        className="text-blue-500"
-                      />
 
-                    </button>
 
-                    {/* DELETE */}
-                    <button
-                      onClick={(e) => {
 
-                        e.stopPropagation()
 
-                        handleDelete(gift.id)
-                      }}
-                      className="bg-white rounded-full p-2 shadow hover:bg-red-50 transition"
-                    >
+<div className="max-w-7xl mx-auto px-4 py-12">
 
-                      <Trash2
-                        size={18}
-                        className="text-red-500"
-                      />
 
-                    </button>
 
-                  </div>
 
-                  {/* CONTENT */}
-                  <div className="p-6">
 
-                    <h3 className="text-2xl font-semibold mb-2 text-[#2b2118]">
+<div className="bg-white rounded-3xl p-6 mb-10">
 
-                      {gift.title}
 
-                    </h3>
+<div className="flex justify-between items-center">
 
-                    {gift.addedBy?.name && (
 
-                      <p className="text-sm text-gray-500 mb-3">
+<div>
 
-                        Added by {gift.addedBy.name}
 
-                      </p>
-                    )}
+<div className="flex gap-2 items-center mb-4">
 
-                    {gift.description && (
+<Share2/>
 
-                      <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-2">
+<h3 className="text-xl font-semibold">
 
-                        {gift.description}
+Share Registry
 
-                      </p>
-                    )}
+</h3>
 
-                    {gift.price && (
+</div>
 
-                      <div className="text-[#d96b3c] font-semibold text-lg mb-4">
 
-                        ETB {gift.price}
 
-                      </div>
-                    )}
+<div className="flex gap-3">
 
-                    {gift.isReserved && (
 
-                      <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-2xl px-3 py-2">
+<a
+href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
+target="_blank"
+className="bg-green-500 text-white px-5 py-3 rounded-2xl"
+>
 
-                        Purchased by{' '}
-                        {gift.reservedByName ||
-                          'Someone'}
+WhatsApp
 
-                      </div>
-                    )}
+</a>
 
-                  </div>
 
-                </div>
-              )
-            )}
 
-          </div>
-        )}
 
-      </div>
+<button
+onClick={copyLink}
+className="border px-5 py-3 rounded-2xl flex gap-2"
+>
 
-      {/* ADD MODAL */}
-      <AddGiftModal
-        isOpen={showAddGift}
-        onClose={() =>
-          setShowAddGift(false)
-        }
-        registryId={params.id}
-        onGiftAdded={fetchRegistry}
-      />
 
-      {/* DETAILS MODAL */}
-      <GiftDetailsModal
-        isOpen={!!selectedGift}
-        onClose={() =>
-          setSelectedGift(null)
-        }
-        gift={selectedGift}
-        registryId={params.id}
-        refresh={fetchRegistry}
-      />
+{copied?<Check/>:<Copy/>}
 
-      {/* EDIT MODAL */}
-      <EditGiftModal
-        isOpen={!!editingGift}
-        onClose={() =>
-          setEditingGift(null)
-        }
-        gift={editingGift}
-        refresh={fetchRegistry}
-      />
 
-    </div>
-  )
+{copied?'Copied':'Copy'}
+
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<div className="bg-white p-4 border rounded-2xl">
+
+<QRCode
+value={shareUrl || ' '}
+size={120}
+/>
+
+
+</div>
+
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div className="flex justify-between items-center mb-10">
+
+
+<h2 className="text-3xl font-display flex gap-3 items-center">
+
+
+<Gift/>
+
+Gifts
+
+
+</h2>
+
+
+
+
+<button
+
+onClick={()=>setShowAddGift(true)}
+
+className="bg-[#d96b3c] text-white px-6 py-3 rounded-2xl flex gap-2"
+
+>
+
+
+<Plus/>
+
+Add Gift
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+
+
+{
+registry.gifts?.map(
+(gift:any)=>(
+
+
+
+<div
+
+key={gift.id}
+
+className="bg-white rounded-3xl overflow-hidden shadow relative cursor-pointer"
+
+onClick={()=>setSelectedGift(gift)}
+
+>
+
+
+
+
+{
+gift.image ?
+
+<img
+src={gift.image}
+className="w-full h-72 object-cover"
+/>
+
+
+:
+
+<div className="h-72 bg-gray-100 flex items-center justify-center">
+
+<Gift/>
+
+</div>
+
+}
+
+
+
+
+
+{
+gift.addedById === user?.id && (
+
+
+<div className="absolute top-4 right-4 flex gap-2">
+
+
+<button
+
+onClick={(e)=>{
+
+e.stopPropagation()
+
+setEditingGift(gift)
+
+}}
+
+className="bg-white p-2 rounded-full shadow"
+
+>
+
+<Pencil size={18}/>
+
+</button>
+
+
+
+<button
+
+onClick={(e)=>{
+
+e.stopPropagation()
+
+handleDelete(gift.id)
+
+}}
+
+className="bg-white p-2 rounded-full shadow"
+
+>
+
+
+<Trash2 size={18}/>
+
+
+</button>
+
+
+</div>
+
+
+)
+
+}
+
+
+
+
+
+<div className="p-6">
+
+
+<h3 className="text-2xl font-semibold">
+
+{gift.title}
+
+</h3>
+
+
+
+
+
+{
+gift.addedById === registry.userId ?
+
+
+<p className="text-[#d96b3c] text-sm mt-2">
+
+Owner's Gift
+
+</p>
+
+
+:
+
+
+gift.addedBy?.name &&
+
+
+<p className="text-gray-500 text-sm mt-2">
+
+Suggested by {gift.addedBy.name}
+
+</p>
+
+
+}
+
+
+
+
+<p className="text-gray-600 mt-3">
+
+{gift.description}
+
+</p>
+
+
+
+{
+gift.price &&
+
+<p className="text-[#d96b3c] mt-3 font-semibold">
+
+ETB {gift.price}
+
+</p>
+
+}
+
+
+
+</div>
+
+
+
+</div>
+
+
+)
+
+)
+
+}
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+<AddGiftModal
+
+isOpen={showAddGift}
+
+onClose={()=>setShowAddGift(false)}
+
+registryId={params.id}
+
+onGiftAdded={fetchRegistry}
+
+/>
+
+
+
+
+
+<GiftDetailsModal
+
+isOpen={!!selectedGift}
+
+onClose={()=>setSelectedGift(null)}
+
+gift={selectedGift}
+
+registryId={params.id}
+
+refresh={fetchRegistry}
+
+/>
+
+
+
+
+
+<EditGiftModal
+
+isOpen={!!editingGift}
+
+onClose={()=>setEditingGift(null)}
+
+gift={editingGift}
+
+refresh={fetchRegistry}
+
+/>
+
+
+
+</div>
+
+)
+
 }

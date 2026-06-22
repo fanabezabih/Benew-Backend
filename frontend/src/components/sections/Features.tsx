@@ -1,136 +1,102 @@
-'use client'
-
-import { useEffect, useState } from 'react'
-
-const features = [
-  {
-    titleEn: 'Secure payments',
-    titleAm: 'ደህንነቱ የተጠበቀ ክፍያ',
-    descriptionEn: 'Telebirr and more',
-    descriptionAm: 'ቴሌብር እና ተጨማሪ',
-    number: '01',
-  },
-  {
-    titleEn: 'Diaspora-friendly',
-    titleAm: 'ለዲያስፖራ ተስማሚ',
-    descriptionEn: 'Anyone can send gifts',
-    descriptionAm: 'ማንኛውም ሰው ስጦታ መላክ ይችላል',
-    number: '02',
-  },
-  {
-    titleEn: 'One link for everything',
-    titleAm: 'አንድ ሊንክ',
-    descriptionEn: 'Easy to share',
-    descriptionAm: 'ቀላል ማጋራት',
-    number: '03',
-  },
-  {
-    titleEn: 'No awkward asks',
-    titleAm: 'አያሳፍር ጥያቄ',
-    descriptionEn: 'Let your list talk',
-    descriptionAm: 'ዝርዝርዎ ይናገር',
-    number: '04',
-  },
-]
-
 export default function Features() {
-
-  const [current, setCurrent] = useState(0)
-
-  useEffect(() => {
-
-    const interval = setInterval(() => {
-
-      setCurrent((prev) =>
-        (prev + 1) % features.length
-      )
-
-    }, 2000)
-
-    return () => clearInterval(interval)
-
-  }, [])
-
   return (
+    <section className="py-24 bg-[#fffaf7]">
 
-    <section className="py-24 bg-white overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="text-center mb-16">
 
-        <div className="relative h-[320px]">
+          <span className="inline-block px-4 py-2 rounded-full bg-[#fff1ea] text-[#d96b3c] text-sm font-medium">
+            Why Bene'nw
+          </span>
 
-          {features.map((feature, index) => (
+          <h2 className="mt-6 font-display text-4xl md:text-5xl text-[#2f1712]">
+            Celebrations made simpler
+          </h2>
 
-            <div
-              key={index}
-              className={`absolute inset-0 transition-all duration-700 ${
-                current === index
-                  ? 'opacity-100 translate-x-0'
-                  : 'opacity-0 translate-x-10 pointer-events-none'
-              }`}
-            >
+          <p className="mt-4 max-w-2xl mx-auto text-[#6d5a52] leading-7">
+            A modern way to organize gifts, receive support, and celebrate life's
+            biggest moments with the people who matter most.
+          </p>
 
-              <div className="relative h-full rounded-[36px] border border-[#efd9ca] bg-[#fffaf7] px-10 py-12 shadow-sm">
+        </div>
 
-                {/* NUMBER */}
-                <span className="absolute top-8 right-8 text-[70px] font-bold text-[#f3ddd1]">
+        {/* Layout */}
+        <div className="grid lg:grid-cols-12 gap-5">
 
-                  {feature.number}
+          {/* Large Card */}
+          <div className="lg:col-span-7 bg-[#fff1ea] rounded-[36px] p-10">
 
-                </span>
-
-                {/* LINE */}
-                <div className="mb-8 h-[4px] w-16 rounded-full bg-[#d96b3c]" />
-
-                {/* TITLE */}
-                <h2 className="max-w-[500px] font-display text-4xl font-semibold leading-tight text-[#2f1712]">
-
-                  <span className="text-en">
-                    {feature.titleEn}
-                  </span>
-
-                  <span className="text-am">
-                    {feature.titleAm}
-                  </span>
-
-                </h2>
-
-                {/* DESCRIPTION */}
-                <p className="mt-6 max-w-[560px] text-[17px] leading-8 text-[#6d5a52]">
-
-                  <span className="text-en">
-                    {feature.descriptionEn}
-                  </span>
-
-                  <span className="text-am">
-                    {feature.descriptionAm}
-                  </span>
-
-                </p>
-
-                {/* DOTS */}
-                <div className="absolute bottom-8 left-10 flex gap-3">
-
-                  {features.map((_, i) => (
-
-                    <div
-                      key={i}
-                      className={`h-2.5 rounded-full transition-all duration-300 ${
-                        current === i
-                          ? 'w-10 bg-[#d96b3c]'
-                          : 'w-2.5 bg-[#ead8cf]'
-                      }`}
-                    />
-
-                  ))}
-
-                </div>
-
-              </div>
-
+            <div className="text-[#d96b3c] text-sm font-medium mb-4">
+              01
             </div>
 
-          ))}
+            <h3 className="font-display text-3xl md:text-4xl text-[#2f1712] mb-4">
+              Made for Ethiopian celebrations
+            </h3>
+
+            <p className="text-[#6d5a52] text-lg leading-8">
+              Whether it's a wedding, graduation, birthday, baby shower,
+              housewarming, or any special milestone, Bene'nw helps loved
+              ones celebrate together.
+            </p>
+
+          </div>
+
+          {/* Small Card */}
+          <div className="lg:col-span-5 bg-white border border-[#efd9ca] rounded-[36px] p-8">
+
+            <div className="text-[#d96b3c] text-sm font-medium mb-4">
+              02
+            </div>
+
+            <h3 className="font-display text-2xl text-[#2f1712] mb-3">
+              One simple link
+            </h3>
+
+            <p className="text-[#6d5a52] leading-7">
+              Share your celebration page anywhere and keep everything in
+              one beautiful place.
+            </p>
+
+          </div>
+
+          {/* Small Card */}
+          <div className="lg:col-span-5 bg-white border border-[#efd9ca] rounded-[36px] p-8">
+
+            <div className="text-[#d96b3c] text-sm font-medium mb-4">
+              03
+            </div>
+
+            <h3 className="font-display text-2xl text-[#2f1712] mb-3">
+              Secure contributions
+            </h3>
+
+            <p className="text-[#6d5a52] leading-7">
+              Receive support through trusted payment partners with a smooth
+              and familiar experience.
+            </p>
+
+          </div>
+
+          {/* Large Dark Card */}
+          <div className="lg:col-span-7 bg-[#2f1712] rounded-[36px] p-10 text-white">
+
+            <div className="text-[#f3b08f] text-sm font-medium mb-4">
+              04
+            </div>
+
+            <h3 className="font-display text-3xl md:text-4xl mb-4">
+              Support from anywhere
+            </h3>
+
+            <p className="text-white/80 text-lg leading-8">
+              Friends and family near or far can contribute, send gifts,
+              and be part of your special moment.
+            </p>
+
+          </div>
 
         </div>
 
