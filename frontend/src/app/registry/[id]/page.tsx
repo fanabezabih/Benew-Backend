@@ -6,22 +6,27 @@ import {
 } from 'react'
 
 import {
+  useRouter
+} from 'next/navigation'
+
+import {
   Gift,
   Plus,
   Trash2,
   Share2,
   Copy,
   Check,
-  MessageCircle,
   Pencil
 } from 'lucide-react'
 
 import QRCode from 'react-qr-code'
 
+
 import {
   registryAPI,
   giftAPI
 } from '@/lib/api'
+
 
 import {
   useAuth
@@ -31,18 +36,25 @@ import {
 import AddGiftModal
 from '@/components/modals/AddGiftModal'
 
+
 import GiftDetailsModal
 from '@/components/modals/GiftDetailsModal'
+
 
 import EditGiftModal
 from '@/components/modals/EditModal'
 
 
+
 interface Props {
+
   params:{
     id:string
   }
+
 }
+
+
 
 
 export default function RegistryPage({
@@ -50,31 +62,49 @@ export default function RegistryPage({
 }:Props){
 
 
-const { user } = useAuth()
+
+const {
+  user,
+  status
+}=useAuth()
+
+
+
+const router =
+useRouter()
+
+
+
 
 
 const [registry,setRegistry] =
 useState<any>(null)
 
 
+
 const [loading,setLoading] =
 useState(true)
+
 
 
 const [showAddGift,setShowAddGift] =
 useState(false)
 
 
+
 const [selectedGift,setSelectedGift] =
 useState<any>(null)
+
 
 
 const [editingGift,setEditingGift] =
 useState<any>(null)
 
 
+
 const [copied,setCopied] =
 useState(false)
+
 
 
 const [shareUrl,setShareUrl] =
@@ -82,21 +112,67 @@ useState('')
 
 
 
+
+
+
+// =======================
+// AUTH CHECK
+// =======================
+
+
+useEffect(()=>{
+
+
+if(
+status === "unauthenticated"
+){
+
+
+router.push(
+`/login?redirect=/registry/${params.id}`
+)
+
+
+}
+
+
+},[
+status,
+params.id,
+router
+])
+
+
+
+
+
+
+
 // =======================
 // SHARE URL
 // =======================
 
+
 useEffect(()=>{
 
-if(typeof window !== 'undefined'){
+
+if(
+typeof window !== "undefined"
+){
+
 
 setShareUrl(
 window.location.href
 )
 
+
 }
 
+
 },[])
+
+
+
 
 
 
@@ -105,16 +181,22 @@ window.location.href
 // FETCH REGISTRY
 // =======================
 
+
 async function fetchRegistry(){
 
+
 try{
+
 
 const data =
 await registryAPI.getById(
 params.id
 )
 
+
+
 setRegistry(data)
+
 
 
 }catch(err){
@@ -129,7 +211,9 @@ setLoading(false)
 
 }
 
+
 }
+
 
 
 
@@ -143,21 +227,31 @@ fetchRegistry()
 
 
 
+
+
+
 // =======================
-// DELETE
+// DELETE GIFT
 // =======================
+
 
 async function handleDelete(
 id:string
 ){
 
+
 const ok =
 confirm(
-'Delete this gift?'
+"Delete this gift?"
 )
 
 
-if(!ok)return
+
+if(!ok)
+return
+
+
+
 
 
 try{
@@ -169,25 +263,34 @@ await giftAPI.deleteGift(id)
 fetchRegistry()
 
 
+
 }catch(err){
+
 
 console.log(err)
 
+
 alert(
-'Failed to delete gift'
+"Failed to delete gift"
 )
 
-}
 
 }
+
+
+}
+
+
+
 
 
 
 
 
 // =======================
-// COPY
+// COPY LINK
 // =======================
+
 
 async function copyLink(){
 
@@ -197,17 +300,25 @@ shareUrl
 )
 
 
+
 setCopied(true)
+
 
 
 setTimeout(()=>{
 
+
 setCopied(false)
+
 
 },2000)
 
 
+
 }
+
+
+
 
 
 
@@ -217,21 +328,31 @@ setCopied(false)
 // LOADING
 // =======================
 
-if(loading){
+
+if(
+loading ||
+status === "loading"
+){
+
 
 return (
+
 
 <div className="min-h-screen flex items-center justify-center bg-[#faf7f4]">
 
 
 <div className="relative">
 
+
 <div className="w-28 h-28 border-4 border-[#e7d6cc] border-t-[#d96b3c] rounded-full animate-spin"/>
 
 
 <img
+
 src="/images/benenew.jpg"
+
 className="w-16 h-16 rounded-full object-cover absolute top-6 left-6"
+
 />
 
 
@@ -240,7 +361,9 @@ className="w-16 h-16 rounded-full object-cover absolute top-6 left-6"
 
 </div>
 
+
 )
+
 
 }
 
@@ -248,7 +371,10 @@ className="w-16 h-16 rounded-full object-cover absolute top-6 left-6"
 
 
 
+
+
 if(!registry){
+
 
 return(
 
@@ -260,7 +386,9 @@ Registry not found
 
 )
 
+
 }
+
 
 
 
@@ -268,8 +396,12 @@ Registry not found
 
 return (
 
+
 <div className="min-h-screen bg-[#faf7f4]">
 
+
+
+{/* HERO */}
 
 
 <section className="relative h-[360px] overflow-hidden">
@@ -287,11 +419,12 @@ className="absolute inset-0 w-full h-full object-cover"
 />
 
 
+
 <div className="absolute inset-0 bg-black/45"/>
 
 
 
-<div className="relative z-10 h-full flex flex-col items-center justify-center text-white px-4 text-center">
+<div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-4">
 
 
 <h1 className="text-5xl font-display">
@@ -302,11 +435,16 @@ className="absolute inset-0 w-full h-full object-cover"
 
 
 
+{
+registry.description &&
+
 <p className="max-w-2xl mt-4">
 
 {registry.description}
 
 </p>
+
+}
 
 
 
@@ -314,9 +452,7 @@ className="absolute inset-0 w-full h-full object-cover"
 
 
 </section>
-
-
-
+{/* MAIN CONTENT */}
 
 
 <div className="max-w-7xl mx-auto px-4 py-12">
@@ -325,18 +461,27 @@ className="absolute inset-0 w-full h-full object-cover"
 
 
 
-<div className="bg-white rounded-3xl p-6 mb-10">
+{/* SHARE SECTION */}
 
 
-<div className="flex justify-between items-center">
+<div className="bg-white rounded-3xl p-6 shadow-sm mb-10">
+
+
+<div className="flex flex-col lg:flex-row gap-8 items-center justify-between">
+
 
 
 <div>
 
 
-<div className="flex gap-2 items-center mb-4">
 
-<Share2/>
+<div className="flex items-center gap-2 mb-4">
+
+
+<Share2
+className="text-[#d96b3c]"
+/>
+
 
 <h3 className="text-xl font-semibold">
 
@@ -344,40 +489,131 @@ Share Registry
 
 </h3>
 
+
 </div>
 
 
 
-<div className="flex gap-3">
 
+
+
+<div className="flex flex-wrap gap-3">
+
+
+
+{/* WHATSAPP */}
 
 <a
+
 href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
+
 target="_blank"
-className="bg-green-500 text-white px-5 py-3 rounded-2xl"
+
+rel="noreferrer"
+
+className="bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded-2xl transition"
+
 >
 
+
 WhatsApp
+
 
 </a>
 
 
 
 
-<button
-onClick={copyLink}
-className="border px-5 py-3 rounded-2xl flex gap-2"
+
+
+{/* TELEGRAM */}
+
+<a
+
+href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}`}
+
+target="_blank"
+
+rel="noreferrer"
+
+className="bg-sky-500 hover:bg-sky-600 text-white px-5 py-3 rounded-2xl transition"
+
 >
 
 
-{copied?<Check/>:<Copy/>}
+Telegram
 
 
-{copied?'Copied':'Copy'}
+</a>
+
+
+
+
+
+
+{/* COPY */}
+
+<button
+
+onClick={copyLink}
+
+className="border px-5 py-3 rounded-2xl flex items-center gap-2 hover:bg-gray-50 transition"
+
+>
+
+
+{
+
+copied
+
+?
+
+<Check size={18}/>
+
+:
+
+<Copy size={18}/>
+
+}
+
+
+
+{
+
+copied
+
+?
+
+"Copied"
+
+:
+
+"Copy Link"
+
+}
+
+
 
 </button>
 
 
+
+
+
+</div>
+
+
+
+
+
+
+
+<div className="mt-4 text-sm text-gray-500 break-all">
+
+
+{shareUrl}
+
+
 </div>
 
 
@@ -387,11 +623,20 @@ className="border px-5 py-3 rounded-2xl flex gap-2"
 
 
 
-<div className="bg-white p-4 border rounded-2xl">
+
+
+
+{/* QR */}
+
+<div className="bg-white p-4 rounded-2xl border">
+
 
 <QRCode
-value={shareUrl || ' '}
+
+value={shareUrl || " "}
+
 size={120}
+
 />
 
 
@@ -401,6 +646,7 @@ size={120}
 
 </div>
 
+
 </div>
 
 
@@ -408,13 +654,21 @@ size={120}
 
 
 
-<div className="flex justify-between items-center mb-10">
 
 
-<h2 className="text-3xl font-display flex gap-3 items-center">
+
+{/* GIFTS HEADER */}
+
+
+<div className="flex items-center justify-between mb-10">
+
+
+
+<h2 className="text-3xl font-display flex items-center gap-3">
 
 
 <Gift/>
+
 
 Gifts
 
@@ -424,16 +678,41 @@ Gifts
 
 
 
+
+
+
 <button
 
-onClick={()=>setShowAddGift(true)}
+onClick={()=>{
 
-className="bg-[#d96b3c] text-white px-6 py-3 rounded-2xl flex gap-2"
+
+if(!user){
+
+
+router.push(
+`/login?redirect=/registry/${params.id}`
+)
+
+
+return
+
+}
+
+
+
+setShowAddGift(true)
+
+
+
+}}
+
+className="bg-[#d96b3c] hover:bg-[#c85f34] text-white px-6 py-3 rounded-2xl flex items-center gap-2"
 
 >
 
 
-<Plus/>
+<Plus size={18}/>
+
 
 Add Gift
 
@@ -449,45 +728,63 @@ Add Gift
 
 
 
+
+
+{/* GIFTS */}
+
+
+
 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
 
 
 {
-registry.gifts?.map(
-(gift:any)=>(
 
+registry.gifts?.map(
+
+(gift:any)=>(
 
 
 <div
 
 key={gift.id}
 
-className="bg-white rounded-3xl overflow-hidden shadow relative cursor-pointer"
-
 onClick={()=>setSelectedGift(gift)}
+
+className="bg-white rounded-3xl overflow-hidden shadow relative cursor-pointer"
 
 >
 
 
 
 
+
 {
+
 gift.image ?
 
+
 <img
+
 src={gift.image}
+
 className="w-full h-72 object-cover"
+
 />
 
 
 :
 
+
 <div className="h-72 bg-gray-100 flex items-center justify-center">
+
 
 <Gift/>
 
+
 </div>
+
+
 
 }
 
@@ -495,8 +792,17 @@ className="w-full h-72 object-cover"
 
 
 
+
+
+
+{/* OWNER ACTIONS */}
+
+
+
 {
-gift.addedById === user?.id && (
+
+gift.addedById === user?.id &&
+
 
 
 <div className="absolute top-4 right-4 flex gap-2">
@@ -506,9 +812,12 @@ gift.addedById === user?.id && (
 
 onClick={(e)=>{
 
+
 e.stopPropagation()
 
+
 setEditingGift(gift)
+
 
 }}
 
@@ -516,9 +825,15 @@ className="bg-white p-2 rounded-full shadow"
 
 >
 
+
 <Pencil size={18}/>
 
+
 </button>
+
+
+
+
 
 
 
@@ -526,9 +841,12 @@ className="bg-white p-2 rounded-full shadow"
 
 onClick={(e)=>{
 
+
 e.stopPropagation()
 
+
 handleDelete(gift.id)
+
 
 }}
 
@@ -543,12 +861,15 @@ className="bg-white p-2 rounded-full shadow"
 </button>
 
 
+
 </div>
 
 
-)
-
 }
+
+
+
+
 
 
 
@@ -559,7 +880,9 @@ className="bg-white p-2 rounded-full shadow"
 
 <h3 className="text-2xl font-semibold">
 
+
 {gift.title}
+
 
 </h3>
 
@@ -567,26 +890,34 @@ className="bg-white p-2 rounded-full shadow"
 
 
 
+
+
 {
+
 gift.addedById === registry.userId ?
+
 
 
 <p className="text-[#d96b3c] text-sm mt-2">
 
+
 Owner's Gift
 
+
 </p>
+
+
+
 
 
 :
 
 
-gift.addedBy?.name &&
-
-
 <p className="text-gray-500 text-sm mt-2">
 
-Suggested by {gift.addedBy.name}
+
+Suggested by {gift.addedBy?.name || "Guest"}
+
 
 </p>
 
@@ -596,23 +927,45 @@ Suggested by {gift.addedBy.name}
 
 
 
-<p className="text-gray-600 mt-3">
-
-{gift.description}
-
-</p>
 
 
 
 {
-gift.price &&
 
-<p className="text-[#d96b3c] mt-3 font-semibold">
+gift.description &&
 
-ETB {gift.price}
+
+<p className="text-gray-600 mt-3">
+
+
+{gift.description}
+
 
 </p>
 
+
+}
+
+
+
+
+
+
+
+{
+
+gift.price &&
+
+
+<p className="text-[#d96b3c] font-semibold mt-3">
+
+
+ETB {gift.price}
+
+
+</p>
+
+
 }
 
 
@@ -621,17 +974,21 @@ ETB {gift.price}
 
 
 
+
+
 </div>
 
 
 )
 
+
 )
+
+
 
 }
 
 
-
 </div>
 
 
@@ -643,6 +1000,12 @@ ETB {gift.price}
 
 
 
+
+
+
+
+
+{/* ADD MODAL */}
 
 
 <AddGiftModal
@@ -659,6 +1022,12 @@ onGiftAdded={fetchRegistry}
 
 
 
+
+
+
+
+
+{/* DETAILS */}
 
 
 <GiftDetailsModal
@@ -679,6 +1048,12 @@ refresh={fetchRegistry}
 
 
 
+
+
+
+{/* EDIT */}
+
+
 <EditGiftModal
 
 isOpen={!!editingGift}
@@ -693,8 +1068,13 @@ refresh={fetchRegistry}
 
 
 
+
+
+
 </div>
 
+
 )
+
 
 }
