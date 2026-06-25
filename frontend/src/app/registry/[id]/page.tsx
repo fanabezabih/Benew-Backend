@@ -36,22 +36,22 @@ import {
 
 
 import AddGiftModal
-from '@/components/modals/AddGiftModal'
+  from '@/components/modals/AddGiftModal'
 
 
 import GiftDetailsModal
-from '@/components/modals/GiftDetailsModal'
+  from '@/components/modals/GiftDetailsModal'
 
 
 import EditGiftModal
-from '@/components/modals/EditModal'
+  from '@/components/modals/EditModal'
 
 
 
 interface Props {
 
-  params:{
-    id:string
+  params: {
+    id: string
   }
 
 }
@@ -60,83 +60,82 @@ interface Props {
 
 export default function RegistryPage({
   params
-}:Props){
+}: Props) {
 
 
 
-const router =
-useRouter()
+  const router =
+    useRouter()
 
 
 
-const {
-  user,
-  status
-} = useAuth()
+  const {
+    user,
 
+  } = useAuth()
 
 
 
 
 
-const [registry,setRegistry] =
-useState<any>(null)
 
+  const [registry, setRegistry] =
+    useState<any>(null)
 
 
-const [loading,setLoading] =
-useState(true)
 
+  const [loading, setLoading] =
+    useState(true)
 
 
-const [showAddGift,setShowAddGift] =
-useState(false)
 
+  const [showAddGift, setShowAddGift] =
+    useState(false)
 
 
-const [selectedGift,setSelectedGift] =
-useState<any>(null)
 
+  const [selectedGift, setSelectedGift] =
+    useState<any>(null)
 
 
-const [editingGift,setEditingGift] =
-useState<any>(null)
 
+  const [editingGift, setEditingGift] =
+    useState<any>(null)
 
 
-const [copied,setCopied] =
-useState(false)
 
+  const [copied, setCopied] =
+    useState(false)
 
 
-const [shareUrl,setShareUrl] =
-useState('')
 
+  const [shareUrl, setShareUrl] =
+    useState('')
 
 
 
 
 
-// =======================
-// SHARE URL
-// =======================
 
-useEffect(()=>{
+  // =======================
+  // SHARE URL
+  // =======================
 
+  useEffect(() => {
 
-if(typeof window !== 'undefined'){
 
+    if (typeof window !== 'undefined') {
 
-setShareUrl(
-window.location.href
-)
 
+      setShareUrl(
+        window.location.href
+      )
 
-}
 
+    }
 
-},[])
 
+  }, [])
 
 
 
@@ -144,58 +143,58 @@ window.location.href
 
 
 
-// =======================
-// FETCH REGISTRY
-// =======================
 
+  // =======================
+  // FETCH REGISTRY
+  // =======================
 
-async function fetchRegistry(){
 
+  async function fetchRegistry() {
 
-try{
 
+    try {
 
-const data =
-await registryAPI.getById(
-params.id
-)
 
+      const data =
+        await registryAPI.getById(
+          params.id
+        )
 
 
-setRegistry(data)
 
+      setRegistry(data)
 
 
-}catch(err){
 
+    } catch (err) {
 
-console.log(err)
 
+      console.log(err)
 
-}finally{
 
+    } finally {
 
-setLoading(false)
 
+      setLoading(false)
 
-}
 
+    }
 
-}
 
+  }
 
 
 
 
 
-useEffect(()=>{
 
+  useEffect(() => {
 
-fetchRegistry()
 
+    fetchRegistry()
 
-},[])
 
+  }, [])
 
 
 
@@ -204,58 +203,58 @@ fetchRegistry()
 
 
 
-// =======================
-// DELETE GIFT
-// =======================
 
+  // =======================
+  // DELETE GIFT
+  // =======================
 
-async function handleDelete(
-id:string
-){
 
+  async function handleDelete(
+    id: string
+  ) {
 
 
-const confirmDelete =
-confirm(
-'Delete this gift?'
-)
 
+    const confirmDelete =
+      confirm(
+        'Delete this gift?'
+      )
 
 
-if(!confirmDelete)
-return
 
+    if (!confirmDelete)
+      return
 
 
 
 
 
-try{
 
+    try {
 
-await giftAPI.deleteGift(id)
 
+      await giftAPI.deleteGift(id)
 
-fetchRegistry()
 
+      fetchRegistry()
 
 
-}catch(err){
 
+    } catch (err) {
 
-console.log(err)
 
+      console.log(err)
 
-alert(
-'Failed to delete gift'
-)
 
+      alert(
+        'Failed to delete gift'
+      )
 
-}
 
+    }
 
-}
 
+  }
 
 
 
@@ -263,36 +262,36 @@ alert(
 
 
 
-// =======================
-// COPY LINK
-// =======================
 
+  // =======================
+  // COPY LINK
+  // =======================
 
-async function copyLink(){
 
+  async function copyLink() {
 
-await navigator.clipboard.writeText(
-shareUrl
-)
 
+    await navigator.clipboard.writeText(
+      shareUrl
+    )
 
 
-setCopied(true)
 
+    setCopied(true)
 
 
-setTimeout(()=>{
 
+    setTimeout(() => {
 
-setCopied(false)
 
+      setCopied(false)
 
-},2000)
 
+    }, 2000)
 
 
-}
 
+  }
 
 
 
@@ -300,126 +299,126 @@ setCopied(false)
 
 
 
-if(loading){
 
+  if (loading) {
 
-return(
 
+    return (
 
-<div className="min-h-screen flex items-center justify-center bg-[#faf7f4]">
 
+      <div className="min-h-screen flex items-center justify-center bg-[#faf7f4]">
 
-<div className="relative">
 
+        <div className="relative">
 
-<div className="w-28 h-28 border-4 border-[#e7d6cc] border-t-[#d96b3c] rounded-full animate-spin"/>
 
+          <div className="w-28 h-28 border-4 border-[#e7d6cc] border-t-[#d96b3c] rounded-full animate-spin" />
 
 
-<img
 
-src="/images/benenew.jpg"
+          <img
 
-className="w-16 h-16 rounded-full object-cover absolute top-6 left-6"
+            src="/images/benenew.jpg"
 
-/>
+            className="w-16 h-16 rounded-full object-cover absolute top-6 left-6"
 
+          />
 
-</div>
 
+        </div>
 
-</div>
 
+      </div>
 
-)
 
+    )
 
-}
 
+  }
 
 
 
 
 
-if(!registry){
 
+  if (!registry) {
 
-return(
 
-<div className="min-h-screen flex items-center justify-center">
+    return (
 
+      <div className="min-h-screen flex items-center justify-center">
 
-Registry not found
 
+        Registry not found
 
-</div>
 
-)
+      </div>
 
+    )
 
-}
-return (
 
-<div className="min-h-screen bg-[#faf7f4]">
+  }
+  return (
 
+    <div className="min-h-screen bg-[#faf7f4]">
 
 
-{/* HERO */}
 
+      {/* HERO */}
 
-<section className="relative h-[360px] overflow-hidden">
 
+      <section className="relative h-[360px] overflow-hidden">
 
-<img
 
-src={
-registry.coverImage ||
-'https://images.unsplash.com/photo-1519225421980-715cb0215aed'
-}
+        <img
 
-className="absolute inset-0 w-full h-full object-cover"
+          src={
+            registry.coverImage ||
+            'https://images.unsplash.com/photo-1519225421980-715cb0215aed'
+          }
 
-/>
+          className="absolute inset-0 w-full h-full object-cover"
 
+        />
 
 
-<div className="absolute inset-0 bg-black/45"/>
 
+        <div className="absolute inset-0 bg-black/45" />
 
 
-<div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-4">
 
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-white px-4">
 
-<h1 className="text-5xl md:text-6xl font-display">
 
-{registry.title}
+          <h1 className="text-5xl md:text-6xl font-display">
 
-</h1>
+            {registry.title}
 
+          </h1>
 
 
 
 
-{
-registry.description &&
 
+          {
+            registry.description &&
 
-<p className="max-w-2xl mt-4 text-lg">
 
-{registry.description}
+            <p className="max-w-2xl mt-4 text-lg">
 
-</p>
+              {registry.description}
 
+            </p>
 
-}
 
+          }
 
 
-</div>
 
+        </div>
 
-</section>
 
+      </section>
 
 
 
@@ -427,50 +426,50 @@ registry.description &&
 
 
 
-<div className="max-w-7xl mx-auto px-4 py-12">
 
+      <div className="max-w-7xl mx-auto px-4 py-12">
 
 
 
 
 
-{/* SHARE */}
 
+        {/* SHARE */}
 
 
-<div className="bg-white rounded-3xl p-6 shadow-sm mb-10">
 
+        <div className="bg-white rounded-3xl p-6 shadow-sm mb-10">
 
 
-<div className="flex flex-col lg:flex-row justify-between items-center gap-8">
 
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-8">
 
 
 
 
-<div>
 
+            <div>
 
 
-<div className="flex items-center gap-2 mb-4">
 
+              <div className="flex items-center gap-2 mb-4">
 
-<Share2
-className="text-[#d96b3c]"
-/>
 
+                <Share2
+                  className="text-[#d96b3c]"
+                />
 
 
-<h3 className="text-xl font-semibold">
 
-Share Registry
+                <h3 className="text-xl font-semibold">
 
-</h3>
+                  Share Registry
 
+                </h3>
 
 
-</div>
 
+              </div>
 
 
 
@@ -478,61 +477,61 @@ Share Registry
 
 
 
-<div className="flex flex-wrap gap-3">
 
+              <div className="flex flex-wrap gap-3">
 
 
 
 
-{/* WHATSAPP */}
 
+                {/* WHATSAPP */}
 
 
-<a
 
-href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
+                <a
 
-target="_blank"
+                  href={`https://wa.me/?text=${encodeURIComponent(shareUrl)}`}
 
-rel="noreferrer"
+                  target="_blank"
 
-className="bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded-2xl"
+                  rel="noreferrer"
 
->
+                  className="bg-green-500 hover:bg-green-600 text-white px-5 py-3 rounded-2xl"
 
+                >
 
-WhatsApp
 
+                  WhatsApp
 
-</a>
 
+                </a>
 
 
 
 
 
 
-{/* TELEGRAM */}
 
+                {/* TELEGRAM */}
 
-<a
 
-href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}`}
+                <a
 
-target="_blank"
+                  href={`https://t.me/share/url?url=${encodeURIComponent(shareUrl)}`}
 
-rel="noreferrer"
+                  target="_blank"
 
-className="bg-sky-500 hover:bg-sky-600 text-white px-5 py-3 rounded-2xl"
+                  rel="noreferrer"
 
->
+                  className="bg-sky-500 hover:bg-sky-600 text-white px-5 py-3 rounded-2xl"
 
+                >
 
-Telegram
 
+                  Telegram
 
-</a>
 
+                </a>
 
 
 
@@ -540,114 +539,114 @@ Telegram
 
 
 
-{/* COPY */}
 
+                {/* COPY */}
 
-<button
 
-onClick={copyLink}
+                <button
 
-className="border px-5 py-3 rounded-2xl flex items-center gap-2"
+                  onClick={copyLink}
 
->
+                  className="border px-5 py-3 rounded-2xl flex items-center gap-2"
 
+                >
 
 
-{
 
-copied
+                  {
 
-?
+                    copied
 
-<Check size={18}/>
+                      ?
 
-:
+                      <Check size={18} />
 
-<Copy size={18}/>
+                      :
 
-}
+                      <Copy size={18} />
 
+                  }
 
 
-{
 
-copied
+                  {
 
-?
+                    copied
 
-"Copied"
+                      ?
 
-:
+                      "Copied"
 
-"Copy Link"
+                      :
 
-}
+                      "Copy Link"
 
+                  }
 
 
-</button>
 
+                </button>
 
 
 
 
 
-</div>
 
+              </div>
 
 
 
 
 
 
-<div className="mt-4 text-sm text-gray-500 break-all">
 
+              <div className="mt-4 text-sm text-gray-500 break-all">
 
-{shareUrl}
 
+                {shareUrl}
 
-</div>
 
+              </div>
 
 
 
 
-</div>
 
+            </div>
 
 
 
 
 
 
-{/* QR CODE */}
 
+            {/* QR CODE */}
 
 
-<div className="bg-white p-4 border rounded-2xl">
 
+            <div className="bg-white p-4 border rounded-2xl">
 
-<QRCode
 
-value={shareUrl || " "}
+              <QRCode
 
-size={120}
+                value={shareUrl || " "}
 
-/>
+                size={120}
 
+              />
 
 
-</div>
 
+            </div>
 
 
 
-</div>
 
+          </div>
 
 
-</div>
 
+        </div>
 
 
 
@@ -656,82 +655,82 @@ size={120}
 
 
 
-{/* GIFTS TITLE */}
 
+        {/* GIFTS TITLE */}
 
 
-<div className="flex justify-between items-center mb-10">
 
+        <div className="flex justify-between items-center mb-10">
 
 
 
 
-<h2 className="text-3xl font-display flex items-center gap-3">
 
+          <h2 className="text-3xl font-display flex items-center gap-3">
 
-<Gift/>
 
+            <Gift />
 
-Gifts
 
+            Gifts
 
-</h2>
 
+          </h2>
 
 
 
 
 
-<button
 
+          <button
 
-onClick={()=>{
 
+            onClick={() => {
 
-if(!user){
 
+              if (!user) {
 
-router.push(
 
-`/login?redirect=/registry/${params.id}`
+                router.push(
 
-)
+                  `/login?redirect=/registry/${params.id}`
 
+                )
 
-return
 
+                return
 
-}
 
+              }
 
 
-setShowAddGift(true)
 
+              setShowAddGift(true)
 
 
-}}
 
+            }}
 
 
-className="bg-[#d96b3c] text-white px-6 py-3 rounded-2xl flex items-center gap-2"
 
->
+            className="bg-[#d96b3c] text-white px-6 py-3 rounded-2xl flex items-center gap-2"
 
+          >
 
-<Plus size={18}/>
 
+            <Plus size={18} />
 
-Add Gift
 
+            Add Gift
 
-</button>
 
+          </button>
 
 
 
 
-</div>
 
+        </div>
 
 
 
@@ -739,71 +738,71 @@ Add Gift
 
 
 
-{/* GIFTS GRID */}
 
+        {/* GIFTS GRID */}
 
 
-<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 
 
 
 
-{
 
-registry.gifts?.map(
+          {
 
-(gift:any)=>(
+            registry.gifts?.map(
 
+              (gift: any) => (
 
 
-<div
 
+                <div
 
-key={gift.id}
 
+                  key={gift.id}
 
-onClick={()=>setSelectedGift(gift)}
 
+                  onClick={() => setSelectedGift(gift)}
 
-className="bg-white rounded-3xl overflow-hidden shadow relative cursor-pointer"
 
->
+                  className="bg-white rounded-3xl overflow-hidden shadow relative cursor-pointer"
 
+                >
 
 
 
 
-{
 
-gift.image ?
+                  {
 
+                    gift.image ?
 
-<img
 
-src={gift.image}
+                      <img
 
-className="w-full h-72 object-cover"
+                        src={gift.image}
 
-/>
+                        className="w-full h-72 object-cover"
 
+                      />
 
 
-:
 
+                      :
 
-<div className="h-72 bg-gray-100 flex items-center justify-center">
 
+                      <div className="h-72 bg-gray-100 flex items-center justify-center">
 
-<Gift/>
 
+                        <Gift />
 
-</div>
 
+                      </div>
 
 
-}
 
+                  }
 
 
 
@@ -811,45 +810,45 @@ className="w-full h-72 object-cover"
 
 
 
-{/* ONLY OWNER OF THIS GIFT */}
 
+                  {/* ONLY OWNER OF THIS GIFT */}
 
 
-{
 
-gift.addedById === user?.id &&
+                  {
 
+                    gift.addedById === user?.id &&
 
 
-<div className="absolute top-4 right-4 flex gap-2">
 
+                    <div className="absolute top-4 right-4 flex gap-2">
 
-<button
 
+                      <button
 
-onClick={(e)=>{
 
+                        onClick={(e) => {
 
-e.stopPropagation()
 
+                          e.stopPropagation()
 
-setEditingGift(gift)
 
+                          setEditingGift(gift)
 
-}}
 
+                        }}
 
 
-className="bg-white p-2 rounded-full shadow"
 
->
+                        className="bg-white p-2 rounded-full shadow"
 
+                      >
 
-<Pencil size={18}/>
 
+                        <Pencil size={18} />
 
-</button>
 
+                      </button>
 
 
 
@@ -857,166 +856,165 @@ className="bg-white p-2 rounded-full shadow"
 
 
 
-<button
 
+                      <button
 
-onClick={(e)=>{
 
+                        onClick={(e) => {
 
-e.stopPropagation()
 
+                          e.stopPropagation()
 
-handleDelete(gift.id)
 
+                          handleDelete(gift.id)
 
-}}
 
+                        }}
 
 
-className="bg-white p-2 rounded-full shadow"
 
->
+                        className="bg-white p-2 rounded-full shadow"
 
+                      >
 
-<Trash2 size={18}/>
 
+                        <Trash2 size={18} />
 
-</button>
 
+                      </button>
 
 
-</div>
 
+                    </div>
 
 
-}
 
-id="q8p4mx"
-<div className="p-6">
+                  }
 
 
-<h3 className="text-2xl font-semibold">
+                  <div className="p-6">
 
-{gift.title}
 
-</h3>
+                    <h3 className="text-2xl font-semibold">
 
+                      {gift.title}
 
+                    </h3>
 
 
 
-{/* OWNER / SUGGESTED LABEL */}
 
 
+                    {/* OWNER / SUGGESTED LABEL */}
 
-{
 
-gift.addedById === registry.userId ?
 
+                    {
 
+                      gift.addedById === registry.userId ?
 
-<p className="text-[#d96b3c] text-sm mt-2 font-medium">
 
-Owner's Gift
 
-</p>
+                        <p className="text-[#d96b3c] text-sm mt-2 font-medium">
 
+                          Owner's Gift
 
+                        </p>
 
-:
 
 
+                        :
 
-<p className="text-gray-500 text-sm mt-2">
 
-Suggested by {gift.addedBy?.name || "Guest"}
 
-</p>
+                        <p className="text-gray-500 text-sm mt-2">
 
+                          Suggested by {gift.addedBy?.name || "Guest"}
 
+                        </p>
 
-}
 
 
+                    }
 
 
 
 
 
 
-{
 
-gift.description &&
 
+                    {
 
-<p className="text-gray-600 mt-3">
+                      gift.description &&
 
 
-{gift.description}
+                      <p className="text-gray-600 mt-3">
 
 
-</p>
+                        {gift.description}
 
 
-}
+                      </p>
 
 
+                    }
 
 
 
 
 
 
-{
 
-gift.price &&
 
+                    {
 
-<p className="text-[#d96b3c] font-semibold mt-3">
+                      gift.price &&
 
 
-ETB {gift.price}
+                      <p className="text-[#d96b3c] font-semibold mt-3">
 
 
-</p>
+                        ETB {gift.price}
 
 
-}
+                      </p>
 
 
+                    }
 
 
 
 
-</div>
 
 
+                  </div>
 
-</div>
 
 
-)
+                </div>
 
 
-)
+              )
 
 
-}
+            )
 
 
+          }
 
-</div>
 
 
+        </div>
 
 
 
 
 
 
-</div>
 
 
+      </div>
 
 
 
@@ -1024,28 +1022,28 @@ ETB {gift.price}
 
 
 
-{/* ADD GIFT MODAL */}
 
 
+      {/* ADD GIFT MODAL */}
 
-<AddGiftModal
 
 
-isOpen={showAddGift}
+      <AddGiftModal
 
 
-onClose={()=>setShowAddGift(false)}
+        isOpen={showAddGift}
 
 
-registryId={params.id}
+        onClose={() => setShowAddGift(false)}
 
 
-onGiftAdded={fetchRegistry}
+        registryId={params.id}
 
 
-/>
+        onGiftAdded={fetchRegistry}
 
 
+      />
 
 
 
@@ -1053,68 +1051,52 @@ onGiftAdded={fetchRegistry}
 
 
 
-{/* DETAILS MODAL */}
 
 
+      {/* DETAILS MODAL */}
 
-<GiftDetailsModal
 
 
-isOpen={!!selectedGift}
+      <GiftDetailsModal
 
 
-onClose={()=>setSelectedGift(null)}
+        isOpen={!!selectedGift}
 
 
-gift={selectedGift}
+        onClose={() => setSelectedGift(null)}
 
 
-registryId={params.id}
+        gift={selectedGift}
 
 
-refresh={fetchRegistry}
+        registryId={params.id}
 
 
-/>
+        refresh={fetchRegistry}
 
 
+      />
 
+      {/* EDIT MODAL */}
 
 
 
+      <EditGiftModal
 
 
+        isOpen={!!editingGift}
 
-{/* EDIT MODAL */}
 
+        onClose={() => setEditingGift(null)}
 
 
-<EditGiftModal
+        gift={editingGift}
 
 
-isOpen={!!editingGift}
+        refresh={fetchRegistry}
 
+      />
+    </div>
 
-onClose={()=>setEditingGift(null)}
-
-
-gift={editingGift}
-
-
-refresh={fetchRegistry}
-
-
-/>
-
-
-
-
-
-
-</div>
-
-
-)
-
-
+  )
 }
